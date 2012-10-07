@@ -1,0 +1,55 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubuMVC.Core.View", "FubuMVC.Core.View\FubuMVC.Core.View.csproj", "{2A1EC669-763F-4C2E-BC22-99A47A4BD5B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubuMVC.Core.View.Testing", "FubuMVC.Core.View.Testing\FubuMVC.Core.View.Testing.csproj", "{23030603-A0A2-4727-A15A-B4F0FE491AF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubuMVC.Spark", "FubuMVC.Spark\FubuMVC.Spark.csproj", "{9D6BF559-6461-4EAC-BB16-F976FF43E8DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubuMVC.Spark.Tests", "FubuMVC.Spark.Tests\FubuMVC.Spark.Tests.csproj", "{7F5C625C-603B-4D8B-97A8-BCBF6D8BC1FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubuMVC.Razor", "FubuMVC.Razor\FubuMVC.Razor.csproj", "{A88246A6-2A7A-4964-902E-A5A7FDAAA9D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubuMVC.Razor.Tests", "FubuMVC.Razor.Tests\FubuMVC.Razor.Tests.csproj", "{E046AC32-25C3-4A63-A5DB-FD9F0012F2F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewEngineIntegrationTesting", "ViewEngineIntegrationTesting\ViewEngineIntegrationTesting.csproj", "{08545D11-3500-4EA9-BB8A-4914C7A3FBAD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2A1EC669-763F-4C2E-BC22-99A47A4BD5B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A1EC669-763F-4C2E-BC22-99A47A4BD5B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A1EC669-763F-4C2E-BC22-99A47A4BD5B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A1EC669-763F-4C2E-BC22-99A47A4BD5B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23030603-A0A2-4727-A15A-B4F0FE491AF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23030603-A0A2-4727-A15A-B4F0FE491AF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23030603-A0A2-4727-A15A-B4F0FE491AF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23030603-A0A2-4727-A15A-B4F0FE491AF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D6BF559-6461-4EAC-BB16-F976FF43E8DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D6BF559-6461-4EAC-BB16-F976FF43E8DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D6BF559-6461-4EAC-BB16-F976FF43E8DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D6BF559-6461-4EAC-BB16-F976FF43E8DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F5C625C-603B-4D8B-97A8-BCBF6D8BC1FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F5C625C-603B-4D8B-97A8-BCBF6D8BC1FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F5C625C-603B-4D8B-97A8-BCBF6D8BC1FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F5C625C-603B-4D8B-97A8-BCBF6D8BC1FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A88246A6-2A7A-4964-902E-A5A7FDAAA9D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A88246A6-2A7A-4964-902E-A5A7FDAAA9D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A88246A6-2A7A-4964-902E-A5A7FDAAA9D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A88246A6-2A7A-4964-902E-A5A7FDAAA9D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E046AC32-25C3-4A63-A5DB-FD9F0012F2F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E046AC32-25C3-4A63-A5DB-FD9F0012F2F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E046AC32-25C3-4A63-A5DB-FD9F0012F2F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E046AC32-25C3-4A63-A5DB-FD9F0012F2F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08545D11-3500-4EA9-BB8A-4914C7A3FBAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08545D11-3500-4EA9-BB8A-4914C7A3FBAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08545D11-3500-4EA9-BB8A-4914C7A3FBAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08545D11-3500-4EA9-BB8A-4914C7A3FBAD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

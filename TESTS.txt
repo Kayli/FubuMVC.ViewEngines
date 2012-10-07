@@ -1,0 +1,4 @@
+FubuMVC.Core.View.Testing
+FubuMVC.Razor.Tests
+FubuMVC.Spark.Tests
+ViewEngineIntegrationTesting
