@@ -20,7 +20,9 @@ namespace FubuMVC.Razor
         {
             Search = new FileSet { DeepSearch = true };
             Search.AppendInclude("*cshtml");
-            Search.AppendInclude("*vbhtml");            
+            Search.AppendInclude("*vbhtml");     
+            Search.AppendExclude("bin/*.*");
+            Search.AppendExclude("obj/*.*");
         }
 
         private void defaultComposer()
