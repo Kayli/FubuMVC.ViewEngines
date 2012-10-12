@@ -1,3 +1,4 @@
+using FubuMVC.Core.Runtime.Files;
 using FubuTestingSupport;
 using NUnit.Framework;
 
@@ -18,5 +19,31 @@ namespace FubuMVC.Razor.Tests
         {
             ClassUnderTest.Search.DeepSearch.ShouldBeTrue();
         }
-	}
+
+        [Test]
+        public void excludes_bin_and_obj_by_default()
+        {
+            ClassUnderTest.Search.Exclude.Split(';')
+                .ShouldHaveTheSameElementsAs("bin/*.*", "obj/*.*");
+        }
+
+	    [Test]
+        public void ignores_excluded_folders()
+        {
+            var faf = new FubuApplicationFiles();
+
+            ClassUnderTest.Search.AppendExclude("*A3.cshtml");
+            ClassUnderTest.Search.AppendExclude("Templates/*.*");
+
+            var path = System.Reflection.Assembly.GetExecutingAssembly().Location;
+
+            var ex = ClassUnderTest.Search.ExcludedFilesFor(faf.GetApplicationPath());
+            var inc = ClassUnderTest.Search.IncludedFilesFor(faf.GetApplicationPath());
+
+            var files = faf.FindFiles(ClassUnderTest.Search);
+
+            files.ShouldNotHave(f => f.Path.EndsWith("A3.cshtml"));
+            files.ShouldNotHave(f => f.Path.EndsWith("A4.cshtml"));
+        }
+    }
 }
