@@ -83,6 +83,7 @@
     <Compile Include="Attachment\DefaultProfileTester.cs" />
     <Compile Include="Attachment\ProfileViewTokenTester.cs" />
     <Compile Include="Attachment\ViewAttacherTester.cs" />
+    <Compile Include="Attachment\ViewExclusionTester.cs" />
     <Compile Include="Attachment\ViewTokenExtensionsTester.cs" />
     <Compile Include="Default_ViewAttachment_Filters_Convention_Tester.cs" />
     <Compile Include="FakeViews\Folder1\A.aspx.cs">

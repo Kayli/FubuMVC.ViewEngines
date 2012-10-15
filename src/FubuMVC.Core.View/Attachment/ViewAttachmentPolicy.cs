@@ -6,6 +6,12 @@ using FubuMVC.Core.Runtime.Conditionals;
 
 namespace FubuMVC.Core.View.Attachment
 {
+    /// <summary>
+    /// Settings that governs how the view attachment will attempt to match views to actions in a 
+    /// FubuMVC application.  It is no longer necessary to explicitly specify the attachment policy
+    /// in your application if you just want to use the default matching
+    /// 
+    /// </summary>
     public class ViewAttachmentPolicy
     {
         private readonly IList<Func<IViewToken, bool>> _defaultExcludes = new List<Func<IViewToken, bool>>();
@@ -32,7 +38,7 @@ namespace FubuMVC.Core.View.Attachment
             }
         }
 
-        public IEnumerable<ProfileViewBag> Profiles(BehaviorGraph graph)
+        internal IEnumerable<ProfileViewBag> Profiles(BehaviorGraph graph)
         {
             if (_profiles.Any())
             {
@@ -52,6 +58,15 @@ namespace FubuMVC.Core.View.Attachment
             }
         }
 
+        /// <summary>
+        /// Create an attachment profile based on a runtime condition.  The original intent of view profiles
+        /// was to enable multiple views per action based on the detected device of the user (desktop, tablet, smartphone),
+        /// but is not limited to that functionality
+        /// </summary>
+        /// <param name="conditionType"></param>
+        /// <param name="filter"></param>
+        /// <param name="nameCorrection"></param>
+        /// <returns></returns>
         public IViewProfile Profile(Type conditionType, Func<IViewToken, bool> filter,
                                        Func<IViewToken, string> nameCorrection)
         {
@@ -62,6 +77,10 @@ namespace FubuMVC.Core.View.Attachment
             return profile;
         }
 
+        /// <summary>
+        /// Add a new strategy for attaching views to actions
+        /// </summary>
+        /// <param name="filter"></param>
         public void AddFilter(IViewsForActionFilter filter)
         {
             _filters.Add(filter);
@@ -79,6 +98,10 @@ namespace FubuMVC.Core.View.Attachment
             public IViewProfile Profile { get; private set; }
         }
 
+        /// <summary>
+        /// Explicitly define your attachment policy strategies in order
+        /// </summary>
+        /// <param name="configure"></param>
         public void TryToAttach(Action<ViewsForActionFilterExpression> configure)
         {
             var expression = new ViewsForActionFilterExpression(this);

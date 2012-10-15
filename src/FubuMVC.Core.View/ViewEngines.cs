@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using FubuCore.Descriptions;
 using System.Linq;
+using FubuCore.Descriptions;
 using FubuMVC.Core.Registration;
 using FubuMVC.Core.View.Attachment;
 
@@ -9,11 +9,11 @@ namespace FubuMVC.Core.View
 {
     public class ViewEngines
     {
-        private BehaviorGraph _graph;
-        private readonly IList<ViewTokenPolicy> _viewPolicies = new List<ViewTokenPolicy>();
-
+        private readonly IList<Func<IViewToken, bool>> _excludes = new List<Func<IViewToken, bool>>();
         private readonly List<IViewFacility> _facilities = new List<IViewFacility>();
         private readonly Lazy<ViewBag> _viewBag;
+        private readonly IList<ViewTokenPolicy> _viewPolicies = new List<ViewTokenPolicy>();
+        private BehaviorGraph _graph;
 
         public ViewEngines()
         {
@@ -26,7 +26,23 @@ namespace FubuMVC.Core.View
             _viewBag = new Lazy<ViewBag>(() => new ViewBag(theViews));
         }
 
-        public void UseGraph(BehaviorGraph graph)
+        /// <summary>
+        /// All of the views found in this running application.
+        /// </summary>
+        public ViewBag Views
+        {
+            get { return _viewBag.Value; }
+        }
+
+        /// <summary>
+        /// All of the registered view engines in this application
+        /// </summary>
+        public IEnumerable<IViewFacility> Facilities
+        {
+            get { return _facilities; }
+        }
+
+        internal void UseGraph(BehaviorGraph graph)
         {
             _graph = graph;
         }
@@ -52,46 +68,66 @@ namespace FubuMVC.Core.View
             return IfTheViewMatches(combined);
         }
 
-        public ViewBag Views {get { return _viewBag.Value; }}
-
         private ViewBag buildViewBag()
         {
             var views = new List<IViewToken>();
 
-            foreach (var facility in _facilities)
+            foreach (IViewFacility facility in _facilities)
             {
                 views.AddRange(facility.FindViews(_graph));
             }
+
+            _excludes.Each(views.RemoveAll);
 
             _viewPolicies.Each(x => x.Alter(views));
 
             return new ViewBag(views);
         }
 
-        public IEnumerable<IViewFacility> Facilities
-        {
-            get { return _facilities; }
-        }
 
+        /// <summary>
+        /// Programmatically add a new view facility.  This method is generally called
+        /// by each Bottle and should not be necessary by users
+        /// </summary>
+        /// <param name="facility"></param>
         public void AddFacility(IViewFacility facility)
         {
-            var typeOfFacility = facility.GetType();
+            Type typeOfFacility = facility.GetType();
             if (_facilities.Any(f => f.GetType() == typeOfFacility)) return;
 
             _facilities.Add(facility);
         }
 
+        /// <summary>
+        /// Add a new ViewTokenPolicy to alter or configure the behavior of a view
+        /// at configuation time
+        /// </summary>
+        /// <param name="policy"></param>
         public void AddPolicy(ViewTokenPolicy policy)
         {
             _viewPolicies.Add(policy);
         }
+
+        /// <summary>
+        /// Exclude discovered views from being used with the view attachment.  Helpful for being able
+        /// to run FubuMVC simultaneously with ASP.Net MVC or some other web framework in the same
+        /// application
+        /// </summary>
+        /// <param name="filter"></param>
+        public void ExcludeViews(Func<IViewToken, bool> filter)
+        {
+            _excludes.Add(filter);
+        }
     }
 
+    /// <summary>
+    /// Used to create a policy altering views represented by an IViewToken
+    /// </summary>
     public class ViewTokenPolicy : DescribesItself
     {
-        private readonly Func<IViewToken, bool> _filter;
         private readonly Action<IViewToken> _alteration;
         private readonly string _description;
+        private readonly Func<IViewToken, bool> _filter;
 
         public ViewTokenPolicy(Func<IViewToken, bool> filter, Action<IViewToken> alteration, string description)
         {
@@ -100,10 +136,14 @@ namespace FubuMVC.Core.View
             _description = description;
         }
 
+        #region DescribesItself Members
+
         public void Describe(Description description)
         {
             description.Title = _description;
         }
+
+        #endregion
 
         public void Alter(IEnumerable<IViewToken> views)
         {
