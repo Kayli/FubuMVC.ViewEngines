@@ -4,6 +4,7 @@ using System.Web;
 using Bottles;
 using Bottles.Diagnostics;
 using FubuMVC.Core.UI;
+using FubuMVC.Core.View;
 using FubuMVC.Spark.Rendering;
 using FubuMVC.Spark.SparkModel;
 using FubuTestingSupport;
@@ -24,6 +25,12 @@ namespace FubuMVC.Spark.Tests
         {
             _viewEngine = new SparkViewEngine();
             _settings = _viewEngine.Settings;
+
+            var commonViewNamespaces = new CommonViewNamespaces();
+            commonViewNamespaces.Add("Foo");
+            commonViewNamespaces.Add("Bar");
+
+            Services.Inject(commonViewNamespaces);
 
             Services.Inject<ISparkViewEngine>(_viewEngine);
             ClassUnderTest.Activate(Enumerable.Empty<IPackageInfo>(), MockFor<IPackageLog>());
@@ -46,7 +53,7 @@ namespace FubuMVC.Spark.Tests
         }
 
         [Test]
-        public void default_namespaces_are_set()
+        public void default_namespaces_are_set_with_the_namespaces_from_common_view_namespaces()
         {
             var useNamespaces = _settings.UseNamespaces;
             useNamespaces.Each(x => Debug.WriteLine(x));
@@ -57,7 +64,9 @@ namespace FubuMVC.Spark.Tests
                 typeof(VirtualPathUtility).Namespace,
                 typeof(SparkViewFacility).Namespace,
                 
-                typeof(HtmlTag).Namespace
+                typeof(HtmlTag).Namespace,
+                "Foo", 
+                "Bar"
             });
         }
 

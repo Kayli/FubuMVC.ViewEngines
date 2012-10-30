@@ -10,7 +10,6 @@ namespace FubuMVC.Core.View
 
              registry.Policies.Add<ViewAttacher>();
              registry.Policies.Add<ActionlessViewConvention>();
-
          }
     }
 }

@@ -6,6 +6,7 @@ using Bottles;
 using Bottles.Diagnostics;
 using FubuCore;
 using FubuMVC.Core.UI;
+using FubuMVC.Core.View;
 using FubuMVC.Core.View.Model;
 using FubuMVC.Razor.RazorModel;
 using FubuMVC.Razor.Rendering;
@@ -28,13 +29,19 @@ namespace FubuMVC.Razor.Tests
             _config.Namespaces.Clear();
             var templateService = new FubuTemplateService(new TemplateRegistry<IRazorTemplate>(),  new TemplateService(_config), new FileSystem());
 
+            var commonViewNamespaces = new CommonViewNamespaces();
+            commonViewNamespaces.Add("Foo");
+            commonViewNamespaces.Add("Bar");
+
+            Services.Inject(commonViewNamespaces);
+
             Services.Inject(_config);
             Services.Inject<IFubuTemplateService>(templateService);
             ClassUnderTest.Activate(Enumerable.Empty<IPackageInfo>(), MockFor<IPackageLog>());
         }
 
         [Test]
-        public void default_namespaces_are_set()
+        public void default_namespaces_are_set_including_anything_from_CommonViewNamespaces()
         {
             var useNamespaces = _config.Namespaces;
             useNamespaces.Each(x => Debug.WriteLine(x));
@@ -44,7 +51,10 @@ namespace FubuMVC.Razor.Tests
                 typeof(VirtualPathUtility).Namespace,
                 typeof(RazorViewFacility).Namespace,
                 typeof(IPartialInvoker).Namespace,
-                typeof(HtmlTag).Namespace
+                typeof(HtmlTag).Namespace,
+
+                "Foo",
+                "Bar"
             });
         }
 

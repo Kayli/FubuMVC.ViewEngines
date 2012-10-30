@@ -11,5 +11,15 @@ namespace FubuMVC.Core.View
         {
             _namespaces.Fill(typeof(T).Namespace);
         }
+        
+        public void Add(string @namespace)
+        {
+            _namespaces.Fill(@namespace);
+        }
+
+        public IEnumerable<string> Namespaces
+        {
+            get { return _namespaces; }
+        } 
     }
 }

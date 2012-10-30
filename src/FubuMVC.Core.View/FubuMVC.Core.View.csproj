@@ -77,6 +77,7 @@
     <Compile Include="Attachment\ViewsForFilterLog.cs" />
     <Compile Include="Attachment\ViewTokenExtensions.cs" />
     <Compile Include="CommonViewNamespaces.cs" />
+    <Compile Include="CommonViewNamespacesRegistration.cs" />
     <Compile Include="FubuRegistryViewExtensions.cs" />
     <Compile Include="IFubuView.cs" />
     <Compile Include="IViewFacility.cs" />

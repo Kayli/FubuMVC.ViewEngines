@@ -4,6 +4,7 @@ using Bottles;
 using Bottles.Diagnostics;
 using FubuCore;
 using FubuMVC.Core.UI;
+using FubuMVC.Core.View;
 using FubuMVC.Spark.Rendering;
 using FubuMVC.Spark.SparkModel;
 using HtmlTags;
@@ -15,11 +16,13 @@ namespace FubuMVC.Spark
 	{
 		private readonly ISparkTemplateRegistry _templateRegistry;
 		private readonly ISparkViewEngine _engine;
+        private readonly CommonViewNamespaces _namespaces;
 
-		public SparkActivator (ISparkTemplateRegistry templateRegistry, ISparkViewEngine engine)
+        public SparkActivator (ISparkTemplateRegistry templateRegistry, ISparkViewEngine engine, CommonViewNamespaces namespaces)
 		{
 			_templateRegistry = templateRegistry;
 			_engine = engine;
+		    _namespaces = namespaces;
 		}
 
 		public void Activate (IEnumerable<IPackageInfo> packages, IPackageLog log)
@@ -42,6 +45,8 @@ namespace FubuMVC.Spark
                 .AddNamespace (typeof(VirtualPathUtility).Namespace) // System.Web
                 .AddNamespace (typeof(SparkViewFacility).Namespace) // FubuMVC.Spark
                 .AddNamespace (typeof(HtmlTag).Namespace); // HtmlTags   
+
+		    _namespaces.Namespaces.Each(x => settings.AddNamespace(x));
 
             log.Trace("Adding assemblies to SparkSettings:");
 		    settings.UseAssemblies.Each(x => log.Trace("  - {0}".ToFormat(x)));
