@@ -28,7 +28,3 @@
 
 <content:footer>That's right baby!</content:footer>
 
-!{this.LinkTo<ViewEngineIntegrationTesting.ViewEngines.Spark.FireInputModel>().Text("Light her up!")}
-!{this.LinkTo<ViewEngineIntegrationTesting.ViewEngines.Spark.WaterInputModel>().Text("Cool her down!")} 
-!{this.LinkTo<ViewEngineIntegrationTesting.ViewEngines.Spark.EarthViewModel>().Text("Go to ground!")} 
-!{this.LinkTo<ViewEngineIntegrationTesting.ViewEngines.Spark.RemInputModel>().Text("Get some sleep!")}

@@ -15,8 +15,6 @@
       <dependency id="RazorEngine" version="3.0.8" />
       <dependency id="FubuMVC.Core" />
       <dependency id="FubuMVC.Core.View" />
-      <dependency id="FubuMVC.Core.UI" />
-      <dependency id="FubuMVC.Core.Assets" />
     </dependencies>
   </metadata>
   <files>

@@ -37,10 +37,10 @@ namespace FubuMVC.Spark
             settings.SetAutomaticEncoding(true);
 
 			settings.AddAssembly (typeof(HtmlTag).Assembly)
-                .AddAssembly (typeof(FubuPageExtensions).Assembly)
+                .AddAssembly(typeof(IPartialInvoker).Assembly)
+                .AddNamespace (typeof(IPartialInvoker).Namespace)
                 .AddNamespace (typeof(VirtualPathUtility).Namespace) // System.Web
                 .AddNamespace (typeof(SparkViewFacility).Namespace) // FubuMVC.Spark
-                .AddNamespace (typeof(FubuPageExtensions).Namespace) // FubuMVC.Core.UI
                 .AddNamespace (typeof(HtmlTag).Namespace); // HtmlTags   
 
             log.Trace("Adding assemblies to SparkSettings:");

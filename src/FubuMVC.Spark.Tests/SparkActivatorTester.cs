@@ -41,7 +41,7 @@ namespace FubuMVC.Spark.Tests
             _settings.UseAssemblies.ShouldHaveTheSameElementsAs(new[]
             { 
                 typeof(HtmlTag).Assembly.FullName,
-                typeof(FubuPageExtensions).Assembly.FullName 
+                typeof(IPartialInvoker).Assembly.FullName 
             });
         }
 
@@ -53,9 +53,10 @@ namespace FubuMVC.Spark.Tests
 
             useNamespaces.ShouldHaveTheSameElementsAs(new[]
             { 
+                typeof(IPartialInvoker).Namespace,
                 typeof(VirtualPathUtility).Namespace,
                 typeof(SparkViewFacility).Namespace,
-                typeof(FubuPageExtensions).Namespace,
+                
                 typeof(HtmlTag).Namespace
             });
         }

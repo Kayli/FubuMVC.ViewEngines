@@ -15,8 +15,6 @@
       <dependency id="Spark" version="1.7.4.0" />
       <dependency id="FubuMVC.Core" />
       <dependency id="FubuMVC.Core.View" />
-      <dependency id="FubuMVC.Core.UI" />
-      <dependency id="FubuMVC.Core.Assets" />
     </dependencies>
   </metadata>
   <files>

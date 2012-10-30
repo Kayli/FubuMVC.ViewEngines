@@ -31,7 +31,7 @@ namespace FubuMVC.Razor
         {
             _engine.Namespaces.Add(typeof(VirtualPathUtility).Namespace); // System.Web
             _engine.Namespaces.Add(typeof(RazorViewFacility).Namespace); // FubuMVC.Razor
-            _engine.Namespaces.Add(typeof(FubuPageExtensions).Namespace); // FubuMVC.Core.UI
+            _engine.Namespaces.Add(typeof(IPartialInvoker).Namespace); // FubuMVC.Core.UI
             _engine.Namespaces.Add(typeof(HtmlTag).Namespace); // HtmlTags   
 
             log.Trace("Adding namespaces to RazorSettings:");

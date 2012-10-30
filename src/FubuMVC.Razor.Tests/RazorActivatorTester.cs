@@ -43,7 +43,7 @@ namespace FubuMVC.Razor.Tests
             { 
                 typeof(VirtualPathUtility).Namespace,
                 typeof(RazorViewFacility).Namespace,
-                typeof(FubuPageExtensions).Namespace,
+                typeof(IPartialInvoker).Namespace,
                 typeof(HtmlTag).Namespace
             });
         }
