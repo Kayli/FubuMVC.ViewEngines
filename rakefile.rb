@@ -39,7 +39,7 @@ task :ci => [:update_all_dependencies, :default, :history, :package]
 
 desc "Update the version information for the build"
 assemblyinfo :version do |asm|
-  asm_version = BUILD_VERSION + ".0"
+  asm_version = BUILD_NUMBER
   
   begin
     commit = `git log -1 --pretty=format:%H`
