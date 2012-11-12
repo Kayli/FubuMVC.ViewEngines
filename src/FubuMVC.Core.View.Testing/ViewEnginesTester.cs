@@ -16,7 +16,9 @@ namespace FubuMVC.Core.View.Testing
         [SetUp]
         public void Setup()
         {
-            var types = new TypePool(null);
+            var types = new TypePool();
+            types.AddAssembly(GetType().Assembly);
+
             _runner = new ViewEngines();
         }
 

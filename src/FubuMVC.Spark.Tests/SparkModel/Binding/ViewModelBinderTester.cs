@@ -108,7 +108,8 @@ namespace FubuMVC.Spark.Tests.SparkModel.Binding
 
         private TypePool typePool()
         {
-            var pool = new TypePool(GetType().Assembly);
+            var pool = new TypePool();
+            pool.AddAssembly(GetType().Assembly);
 
             pool.AddType(generateType("namespace FubuMVC.Spark.Tests.SparkModel.Binding{public class Bar{}}", "FubuMVC.Spark.Tests.SparkModel.Binding.Bar"));
             pool.AddType<Bar>();

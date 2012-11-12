@@ -118,7 +118,8 @@ namespace FubuMVC.Spark.Tests.SparkModel.Binding
 
         private TypePool typePool()
         {
-            var pool = new TypePool(GetType().Assembly);
+            var pool = new TypePool();
+            pool.AddAssembly(GetType().Assembly);
 
             var externalAssemblyDuplicatedType = generateType("namespace FubuMVC.Spark.Tests.SparkModel.Binding{public class DuplicatedGeneric<T>{}}", "FubuMVC.Spark.Tests.SparkModel.Binding.DuplicatedGeneric`1");
 

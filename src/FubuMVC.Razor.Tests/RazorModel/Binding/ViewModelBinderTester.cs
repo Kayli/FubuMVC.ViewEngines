@@ -105,7 +105,8 @@ namespace FubuMVC.Razor.Tests.RazorModel.Binding
 
         private TypePool typePool()
         {
-            var pool = new TypePool(GetType().Assembly);
+            var pool = new TypePool();
+            pool.AddAssembly(GetType().Assembly);
 
             pool.AddType(generateType("namespace FubuMVC.Razor.Tests.RazorModel.Binding{public class Bar{}}", "FubuMVC.Razor.Tests.RazorModel.Binding.Bar"));
             pool.AddType<Bar>();

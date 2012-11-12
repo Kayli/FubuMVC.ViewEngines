@@ -24,7 +24,7 @@ namespace FubuMVC.Razor
             registry.Services(configureServices);
         }
 
-        private void configureServices(IServiceRegistry services)
+        private void configureServices(ServiceRegistry services)
         {
             var configuration = new TemplateServiceConfiguration {BaseTemplateType = typeof (FubuRazorView)};
 
@@ -56,4 +56,5 @@ namespace FubuMVC.Razor
             services.FillType<IViewModifier<IFubuRazorView>, FubuPartialRendering>();
         }
     }
+
 }

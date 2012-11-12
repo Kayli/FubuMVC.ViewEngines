@@ -24,7 +24,7 @@ namespace FubuMVC.Spark
             registry.Services(configureServices);
         }
 
-        private void configureServices(IServiceRegistry services)
+        private void configureServices(ServiceRegistry services)
         {
             services.ReplaceService<ISparkTemplateRegistry>(_templateRegistry);
             services.ReplaceService<ITemplateRegistry<ITemplate>>(_templateRegistry);

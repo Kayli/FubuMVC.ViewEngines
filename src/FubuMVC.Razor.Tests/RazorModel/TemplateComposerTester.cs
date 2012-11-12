@@ -36,7 +36,8 @@ namespace FubuMVC.Razor.Tests.RazorModel
 
         public TemplateComposerTester()
         {
-            _types = new TypePool(GetType().Assembly);
+            _types = new TypePool();
+            _types.AddAssembly(GetType().Assembly);
         }
 
         protected override void beforeEach()

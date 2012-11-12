@@ -17,7 +17,8 @@ namespace FubuMVC.Core.View.Model
 
         private static TypePool getTypes()
         {
-            var types = new TypePool(ConfigurationGraph.FindTheCallingAssembly());
+            var types = new TypePool();
+            types.AddAssembly(TypePool.FindTheCallingAssembly());
 
             var filter = new CompositeFilter<Assembly>();
             filter.Excludes.Add(a => a.IsDynamic);
