@@ -4,6 +4,7 @@ using System.Linq;
 using FubuCore;
 using FubuMVC.Core.Runtime.Files;
 using FubuMVC.Core.View.Model;
+using FubuMVC.Core.View.Model.Sharing;
 using FubuMVC.Spark.SparkModel;
 using FubuTestingSupport;
 using NUnit.Framework;
@@ -18,6 +19,7 @@ namespace FubuMVC.Spark.Tests.SparkModel
     {
         private const string Package1 = "Package1";
         private const string Package2 = "Package2";
+        private const string Global = "Global";
 
         private readonly TemplateViewFolder _viewFolder;
         private readonly ISparkViewEngine _engine;
@@ -25,6 +27,9 @@ namespace FubuMVC.Spark.Tests.SparkModel
         private readonly TemplateRegistry<ITemplate> _pak1TemplateRegistry;
         private readonly TemplateRegistry<ITemplate> _pak2TemplateRegistry;
         private readonly TemplateRegistry<ITemplate> _appTemplateRegistry;
+        private readonly TemplateRegistry<ITemplate> _globalTemplateRegistry;
+        private readonly TemplateDirectoryProvider<ITemplate> _templateDirectoryProvider;
+        private readonly SharingGraph _sharingGraph;
 
         public ExtendedTester()
         {
@@ -33,13 +38,19 @@ namespace FubuMVC.Spark.Tests.SparkModel
             var pathApp = Path.Combine(testRoot, "App");
             var pathPackage1 = Path.Combine(pathApp, "fubu-packages", "Package1", "WebContent");
             var pathPackage2 = Path.Combine(testRoot, "Package2");
+            var globalPackage = Path.Combine(testRoot, "Global");
 
             var templateRegistry = new TemplateRegistry<ITemplate>();
             var sparkSet = new SparkEngineSettings().Search;
 
+            _sharingGraph = new SharingGraph();
+            _sharingGraph.Global("Global");
+            _sharingGraph.CompileDependencies("Package1", "Package2");
+
             new ContentFolder(TemplateConstants.HostOrigin, pathApp).FindFiles(sparkSet)
                 .Union(new ContentFolder("Package1", pathPackage1).FindFiles(sparkSet)
-                .Union(new ContentFolder("Package2", pathPackage2).FindFiles(sparkSet)))
+                .Union(new ContentFolder("Package2", pathPackage2).FindFiles(sparkSet)
+                .Union(new ContentFolder("Global", globalPackage).FindFiles(sparkSet))))
                 .Each(x =>
                 {
                     if (x.Provenance == TemplateConstants.HostOrigin && x.Path.StartsWith(pathPackage1)) return;
@@ -50,15 +61,18 @@ namespace FubuMVC.Spark.Tests.SparkModel
             templateRegistry.Each(viewPathPolicy.Apply);
 
             _viewFolder = new TemplateViewFolder(templateRegistry);
+            _templateDirectoryProvider = new TemplateDirectoryProvider<ITemplate>(new SharedPathBuilder(), templateRegistry, _sharingGraph);
             _engine = new SparkViewEngine
             {
                 ViewFolder = _viewFolder,
-                BindingProvider = new FubuBindingProvider(new SparkTemplateRegistry(templateRegistry))
+                BindingProvider = new FubuBindingProvider(new SparkTemplateRegistry(templateRegistry)),
+                PartialProvider = new FubuPartialProvider(_templateDirectoryProvider)
             };
 
             _pak1TemplateRegistry = new TemplateRegistry<ITemplate>(templateRegistry.ByOrigin(Package1));
             _pak2TemplateRegistry = new TemplateRegistry<ITemplate>(templateRegistry.ByOrigin(Package2));
             _appTemplateRegistry = new TemplateRegistry<ITemplate>(templateRegistry.FromHost());
+            _globalTemplateRegistry = new TemplateRegistry<ITemplate>(templateRegistry.ByOrigin(Global));
         }
 
         [Test]
@@ -97,8 +111,9 @@ namespace FubuMVC.Spark.Tests.SparkModel
         public void the_correct_number_of_templates_are_resolved()
         {
             _appTemplateRegistry.ShouldHaveCount(11);
-            _pak1TemplateRegistry.ShouldHaveCount(11);
+            _pak1TemplateRegistry.ShouldHaveCount(13);
             _pak2TemplateRegistry.ShouldHaveCount(8);
+            _globalTemplateRegistry.ShouldHaveCount(2);
         }
 
         [Test]
@@ -155,6 +170,22 @@ namespace FubuMVC.Spark.Tests.SparkModel
 
             getViewSource(dueView).ShouldEqual("Inspiron <lenovo/>");
             renderTemplate(dueView).ShouldEqual("Inspiron <lenovo/>");
+        }
+
+        [Test]
+        public void view_from_packages_can_refer_global_partials_in_shared_paths()
+        {
+            var view = _pak1TemplateRegistry.FirstByName("SerieG");
+            getViewSource(view).ShouldEqual("SerieT <globalPartial/>");
+            renderTemplate(view).ShouldEqual("SerieT Global shared partial");
+        }
+
+        [Test]
+        public void view_from_packages_can_not_refer_global_partials_from_paths_other_than_shared_paths()
+        {
+            var view = _pak1TemplateRegistry.FirstByName("SerieGx");
+            getViewSource(view).ShouldEqual("SerieT <notShared/>");
+            renderTemplate(view).ShouldEqual("SerieT <notShared/>");
         }
 
         [Test]

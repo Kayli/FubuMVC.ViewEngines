@@ -114,6 +114,7 @@
     <Compile Include="SparkModel\BindingsAttacherTester.cs" />
     <Compile Include="SparkModel\Binding\ViewDescriptorBinderTester.cs" />
     <Compile Include="SparkModel\FubuBindingProviderTester.cs" />
+    <Compile Include="SparkModel\FubuPartialProviderTester.cs" />
     <Compile Include="SparkModel\Policies\ViewPathPolicyTester.cs" />
     <Compile Include="SparkModel\Sharing\DependencyRuleTester.cs" />
     <Compile Include="SparkModel\Sharing\GlobalDependencyTester.cs" />
@@ -158,6 +159,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
+    <None Include="Templates\App\fubu-packages\Package1\WebContent\Handlers\Models\SerieGx.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\App\fubu-packages\Package1\WebContent\Handlers\Models\SerieG.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Templates\App\fubu-packages\Package1\WebContent\Handlers\Models\SerieZ.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -168,6 +175,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\App\fubu-packages\Package1\WebContent\Handlers\Shared\_fail.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Global\Handlers\Models\_notShared.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Global\Handlers\Shared\_globalPartial.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\Home\file.foo">

@@ -55,7 +55,7 @@ namespace FubuMVC.Spark.Tests.SparkModel.ViewFolder
             var viewPathPolicy = new ViewPathPolicy<ITemplate>();
             templates.Each(viewPathPolicy.Apply);
 
-            _viewFolder = new TemplateViewFolder(templates);
+            _viewFolder = new TemplateViewFolder(new TemplateRegistry<ITemplate>(templates));
         }
 
         [Test]

@@ -5,6 +5,7 @@ using Bottles.Diagnostics;
 using FubuCore;
 using FubuMVC.Core.UI;
 using FubuMVC.Core.View;
+using FubuMVC.Core.View.Model;
 using FubuMVC.Spark.Rendering;
 using FubuMVC.Spark.SparkModel;
 using HtmlTags;
@@ -13,47 +14,50 @@ using Spark;
 namespace FubuMVC.Spark
 {
     public class SparkActivator : IActivator
-	{
-		private readonly ISparkTemplateRegistry _templateRegistry;
-		private readonly ISparkViewEngine _engine;
+    {
+        private readonly ISparkTemplateRegistry _templateRegistry;
+        private readonly ISparkViewEngine _engine;
         private readonly CommonViewNamespaces _namespaces;
+        readonly ITemplateDirectoryProvider<ITemplate> _directoryProvider;
 
-        public SparkActivator (ISparkTemplateRegistry templateRegistry, ISparkViewEngine engine, CommonViewNamespaces namespaces)
-		{
-			_templateRegistry = templateRegistry;
-			_engine = engine;
-		    _namespaces = namespaces;
-		}
+        public SparkActivator (ISparkTemplateRegistry templateRegistry, ISparkViewEngine engine, CommonViewNamespaces namespaces,
+            ITemplateDirectoryProvider<ITemplate> directoryProvider)
+        {
+            _templateRegistry = templateRegistry;
+            _engine = engine;
+            _namespaces = namespaces;
+            _directoryProvider = directoryProvider;
+        }
 
-		public void Activate (IEnumerable<IPackageInfo> packages, IPackageLog log)
-		{
+        public void Activate (IEnumerable<IPackageInfo> packages, IPackageLog log)
+        {
             log.Trace("Running {0}".ToFormat(GetType().Name));
-			
+            
             configureSparkSettings(log);
             setEngineDependencies(log);
-		}
+        }
 
-		private void configureSparkSettings (IPackageLog log)
-		{
-			var settings = (SparkSettings)_engine.Settings;
+        private void configureSparkSettings (IPackageLog log)
+        {
+            var settings = (SparkSettings)_engine.Settings;
 
             settings.SetAutomaticEncoding(true);
 
-			settings.AddAssembly (typeof(HtmlTag).Assembly)
+            settings.AddAssembly (typeof(HtmlTag).Assembly)
                 .AddAssembly(typeof(IPartialInvoker).Assembly)
                 .AddNamespace (typeof(IPartialInvoker).Namespace)
                 .AddNamespace (typeof(VirtualPathUtility).Namespace) // System.Web
                 .AddNamespace (typeof(SparkViewFacility).Namespace) // FubuMVC.Spark
                 .AddNamespace (typeof(HtmlTag).Namespace); // HtmlTags   
 
-		    _namespaces.Namespaces.Each(x => settings.AddNamespace(x));
+            _namespaces.Namespaces.Each(x => settings.AddNamespace(x));
 
             log.Trace("Adding assemblies to SparkSettings:");
-		    settings.UseAssemblies.Each(x => log.Trace("  - {0}".ToFormat(x)));
+            settings.UseAssemblies.Each(x => log.Trace("  - {0}".ToFormat(x)));
 
             log.Trace("Adding namespaces to SparkSettings:");
             settings.UseNamespaces.Each(x => log.Trace("  - {0}".ToFormat(x)));
-		}
+        }
 
         private void setEngineDependencies(IPackageLog log)
         {
@@ -67,6 +71,9 @@ namespace FubuMVC.Spark
 
             engine.BindingProvider = new FubuBindingProvider(_templateRegistry);
             log.Trace("Setting binding provider [{0}] for view engine", engine.BindingProvider.GetType().FullName);
+
+            engine.PartialProvider = new FubuPartialProvider(_directoryProvider);
+            log.Trace("Setting partial provider [{0}] for view engine", engine.PartialProvider.GetType().FullName);
         }
-	}
+    }
 }

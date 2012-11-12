@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FubuCore;
 using FubuMVC.Core.View.Model.Sharing;
 
 namespace FubuMVC.Core.View.Model
@@ -8,6 +9,7 @@ namespace FubuMVC.Core.View.Model
     {
         IEnumerable<string> SharedPathsOf(T template);
         IEnumerable<string> ReachablesOf(T template);
+        IEnumerable<string> SharedViewPathsForOrigin(string origin);
     }
 
     public class TemplateDirectoryProvider<T> : ITemplateDirectoryProvider<T> where T : ITemplateFile
@@ -31,6 +33,17 @@ namespace FubuMVC.Core.View.Model
         public IEnumerable<string> ReachablesOf(T template)
         {
             return getDirectories(template, true).ToList();
+        }
+
+        public IEnumerable<string> SharedViewPathsForOrigin(string origin)
+        {
+            return _graph.SharingsFor(origin)
+                .SelectMany(x => _templates
+                                 .ByOrigin(x)
+                                 .Select(t => t.ViewPath.DirectoryPath())
+                                 .Where(path => _builder.SharedFolderNames.Any(path.EndsWith))
+                                 .Select(t => t))
+                                 .Distinct();
         }
 
         private IEnumerable<string> getDirectories(T template, bool includeDirectAncestor)

@@ -9,6 +9,7 @@ namespace FubuMVC.Core.View.Model
     {
         IEnumerable<string> BuildBy(string path, string root, bool includeDirectAncestor);
 	    IEnumerable<string> BuildBy(string directoryPath);
+	    IEnumerable<string> SharedFolderNames { get; }
     }
 	
     public class SharedPathBuilder : ISharedPathBuilder
@@ -50,6 +51,11 @@ namespace FubuMVC.Core.View.Model
         public IEnumerable<string> BuildBy(string directoryPath)
         {
             return _sharedFolderNames.Select(s => Path.Combine(directoryPath, s)).Distinct();
+        }
+
+        public IEnumerable<string> SharedFolderNames
+        {
+            get { return _sharedFolderNames; }
         }
     }
 }

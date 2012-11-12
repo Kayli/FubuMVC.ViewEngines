@@ -83,7 +83,8 @@ namespace FubuMVC.Spark.Tests.SparkModel
             {
                 new Template(FileSystem.Combine(_root, "Actions", "Home", "home.spark"), _root, TemplateConstants.HostOrigin), 
                 new Template(FileSystem.Combine(_pak1Root, "Actions", "Home", "home.spark"), _pak1Root, "Pak1"),
-                new Template(FileSystem.Combine(_pak2Root, "Home", "home.spark"), _pak2Root, "Pak2")
+                new Template(FileSystem.Combine(_pak2Root, "Home", "home.spark"), _pak2Root, "Pak2"),
+                new Template(FileSystem.Combine(_pak2Root, "Home", Shared, "_test.spark"), _pak2Root, "Pak2"),
             });
 
             _graph = new SharingGraph();
@@ -169,6 +170,16 @@ namespace FubuMVC.Spark.Tests.SparkModel
             };
 
             ClassUnderTest.ReachablesOf(templateAt(0)).ShouldHaveTheSameElementsAs(expected);
+        }
+
+        [Test]
+        public void can_get_shared_view_paths_for_origin()
+        {
+            var policy = new ViewPathPolicy<ITemplate>();
+            _templates.Each(policy.Apply);
+            var origin = templateAt(1).Origin; //from pak1 which has dependency on pak2
+            var pak2SharedLocation = @"_Pak2\Home\{0}".ToFormat(Shared);
+            ClassUnderTest.SharedViewPathsForOrigin(origin).ShouldContain(pak2SharedLocation);
         }
 
         private ITemplate templateAt(int index)
