@@ -17,7 +17,7 @@ namespace ViewEngineIntegrationTesting.ViewEngines.Spark.ThreePassRendering
             theResult = new StringBuilder()
                 .AppendLine("<html>")
                 .AppendLine("<head>")
-                .AppendLine(@"<script src=""/content/js/jquery-ui-accordian.js""/></script>")
+                .AppendLine(@"<script src=""/content/js/jquery-ui-accordian.js""></script>")
                 .AppendLine("</head>")
                 .AppendLine("<body>")
                 .AppendLine("<h1>Three Pass Rendering Test!</h1>")

@@ -156,7 +156,7 @@ namespace FubuMVC.Spark.Tests.SparkModel
         {
             var noLuck = _appTemplateRegistry.FirstByName("NoLuck");
             getViewSource(noLuck).ShouldEqual("Will <fail/>");
-            renderTemplate(noLuck).ShouldEqual("Will <fail/>");
+            renderTemplate(noLuck).ShouldEqual("Will <fail></fail>");
         }
 
         [Test]
@@ -166,10 +166,10 @@ namespace FubuMVC.Spark.Tests.SparkModel
             var dueView = _pak2TemplateRegistry.FirstByName("Inspiron");
 
             getViewSource(dosView).ShouldEqual("SerieT <dell/>");
-            renderTemplate(dosView).ShouldEqual("SerieT <dell/>");
+            renderTemplate(dosView).ShouldEqual("SerieT <dell></dell>");
 
             getViewSource(dueView).ShouldEqual("Inspiron <lenovo/>");
-            renderTemplate(dueView).ShouldEqual("Inspiron <lenovo/>");
+            renderTemplate(dueView).ShouldEqual("Inspiron <lenovo></lenovo>");
         }
 
         [Test]
@@ -185,7 +185,7 @@ namespace FubuMVC.Spark.Tests.SparkModel
         {
             var view = _pak1TemplateRegistry.FirstByName("SerieGx");
             getViewSource(view).ShouldEqual("SerieT <notShared/>");
-            renderTemplate(view).ShouldEqual("SerieT <notShared/>");
+            renderTemplate(view).ShouldEqual("SerieT <notShared></notShared>");
         }
 
         [Test]
