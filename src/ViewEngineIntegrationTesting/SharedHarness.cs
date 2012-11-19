@@ -41,11 +41,11 @@ namespace ViewEngineIntegrationTesting
         {
             FubuMvcPackageFacility.PhysicalRootPath = GetRootDirectory();
 
-            _server = new SelfHostHttpServer(5500);
+            _server = new SelfHostHttpServer(5500, GetRootDirectory());
             var runtime = FubuApplication.For<HarnessRegistry>().StructureMap(new Container()).Bootstrap();
 
 
-            _server.Start(runtime, GetRootDirectory());
+            _server.Start(runtime);
 
             var urls = runtime.Facility.Get<IUrlRegistry>();
             urls.As<UrlRegistry>().RootAt(_server.BaseAddress);
