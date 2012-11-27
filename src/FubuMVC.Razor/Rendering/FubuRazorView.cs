@@ -21,7 +21,7 @@ namespace FubuMVC.Razor.Rendering
         protected FubuRazorView()
         {
             _services.OnMissing = type => ServiceLocator.GetInstance(type);
-            RenderPartialWith = name => base.Include(name);
+            RenderPartialWith = name => base.Include(name, null);
         }
 
         public IServiceLocator ServiceLocator { get; set; }
@@ -38,7 +38,7 @@ namespace FubuMVC.Razor.Rendering
 
         protected override ITemplate ResolveLayout(string name)
         {
-            return Layout;
+            return LayoutTemplate;
         }
 
         public IUrlRegistry Urls
@@ -50,17 +50,17 @@ namespace FubuMVC.Razor.Rendering
 
         public void UseLayout(IFubuRazorView layout)
         {
-            Layout = layout;
-            if (_Layout == null)
+            LayoutTemplate = layout;
+            if (Layout == null)
             {
-                _Layout = Layout.GetType().FullName;
+                Layout = LayoutTemplate.GetType().FullName;
             }
         }
 
         public void NoLayout()
         {
+            LayoutTemplate = null;
             Layout = null;
-            _Layout = null;
         }
 
         public IRazorTemplate OriginTemplate { get; set; }
@@ -79,7 +79,7 @@ namespace FubuMVC.Razor.Rendering
 
         void IFubuRazorView.RenderPartial()
         {
-            _Layout = null;
+            Layout = null;
             ((IFubuRazorView)this).Render();
         }
 
@@ -96,12 +96,17 @@ namespace FubuMVC.Razor.Rendering
                 base.Write(value);
         }
 
-        public override TemplateWriter Include(string name)
+        public override TemplateWriter Include(string cacheName, object model)
+        {
+            throw new NotSupportedException("Overload with model is not supported");
+        }
+
+        public TemplateWriter Include(string name)
         {
             return RenderPartialWith(name);
         }
 
-        public ITemplate Layout { get; set; }
+        public ITemplate LayoutTemplate { get; set; }
     }
 
     public abstract class FubuRazorView<TViewModel> : FubuRazorView, IFubuRazorView, IFubuPage<TViewModel> where TViewModel : class
@@ -138,7 +143,7 @@ namespace FubuMVC.Razor.Rendering
 
         void IFubuRazorView.RenderPartial()
         {
-            _Layout = null;
+            Layout = null;
             ((IFubuRazorView)this).Render();
         }
 
@@ -166,7 +171,7 @@ namespace FubuMVC.Razor.Rendering
     public interface IFubuRazorView : IRenderableView, ITemplate, IFubuPage
     {
         void RenderPartial();
-        ITemplate Layout { get; }
+        ITemplate LayoutTemplate { get; }
         void UseLayout(IFubuRazorView layout);
         void NoLayout();
         IRazorTemplate OriginTemplate { get; set; }

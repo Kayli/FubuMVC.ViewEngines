@@ -10,10 +10,10 @@ namespace FubuMVC.Razor.Rendering
     {
         public override IFubuRazorView Modify(IFubuRazorView view)
         {
-            if (view.Layout != null)
+            if (view.LayoutTemplate != null)
             {
-                view.Layout.As<IFubuRazorView>().ServiceLocator = view.ServiceLocator;
-                Modify(view.Layout.As<IFubuRazorView>());
+                view.LayoutTemplate.As<IFubuRazorView>().ServiceLocator = view.ServiceLocator;
+                Modify(view.LayoutTemplate.As<IFubuRazorView>());
             }
             return view;
         }
@@ -46,7 +46,7 @@ namespace FubuMVC.Razor.Rendering
                     var partialRendered = partialView.Run(new ExecuteContext());
                     return new TemplateWriter(x => x.Write(partialRendered));
                 };
-                temporary = temporary.Layout.As<IFubuRazorView>();
+                temporary = temporary.LayoutTemplate.As<IFubuRazorView>();
             }
             return view;
         }

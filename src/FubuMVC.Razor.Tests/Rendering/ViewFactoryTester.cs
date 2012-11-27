@@ -39,7 +39,7 @@ namespace FubuMVC.Razor.Tests.Rendering
             _serviceView = MockRepository.GenerateMock<IFubuRazorView>();
 
             _templateService.Expect(x => x.HasTemplate(Arg.Is(viewId.ToString()))).Return(false);
-            _templateService.Expect(x => x.GetTemplate(Arg.Is(source), Arg.Is(viewId.ToString()))).Return(_entryView);
+            _templateService.Expect(x => x.GetTemplate(Arg.Is(source), Arg.Is<object>(null), Arg.Is(viewId.ToString()))).Return(_entryView);
             _service.Expect(x => x.Modify(_entryView)).Return(_serviceView);
         }
 

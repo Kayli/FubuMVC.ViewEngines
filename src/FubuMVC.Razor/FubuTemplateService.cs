@@ -41,44 +41,19 @@ namespace FubuMVC.Razor
             _inner.AddNamespace(ns);
         }
 
-        public void Compile(string razorTemplate, string name)
-        {
-            _inner.Compile(razorTemplate, name);
-        }
-
         public void Compile(string razorTemplate, Type modelType, string name)
         {
             _inner.Compile(razorTemplate, modelType, name);
         }
 
-        public void Compile<T>(string razorTemplate, string name)
+        public ITemplate CreateTemplate(string razorTemplate, Type templateType, object model)
         {
-            _inner.Compile<T>(razorTemplate, name);
+            throw new NotImplementedException();
         }
 
-        public ITemplate CreateTemplate(string razorTemplate)
+        public IEnumerable<ITemplate> CreateTemplates(IEnumerable<string> razorTemplates, IEnumerable<Type> templateTypes, IEnumerable<object> models, bool parallel = false)
         {
-            return _inner.CreateTemplate(razorTemplate);
-        }
-
-        public ITemplate CreateTemplate<T>(string razorTemplate, T model)
-        {
-            return _inner.CreateTemplate(razorTemplate, model);
-        }
-
-        public IEnumerable<ITemplate> CreateTemplates(IEnumerable<string> razorTemplates, bool parallel = false)
-        {
-            return _inner.CreateTemplates(razorTemplates, parallel);
-        }
-
-        public IEnumerable<ITemplate> CreateTemplates<T>(IEnumerable<string> razorTemplates, IEnumerable<T> models, bool parallel = false)
-        {
-            return _inner.CreateTemplates(razorTemplates, models, parallel);
-        }
-
-        public Type CreateTemplateType(string razorTemplate)
-        {
-            return _inner.CreateTemplateType(razorTemplate);
+            throw new NotImplementedException();
         }
 
         public Type CreateTemplateType(string razorTemplate, Type modelType)
@@ -86,21 +61,19 @@ namespace FubuMVC.Razor
             return _inner.CreateTemplateType(razorTemplate, modelType);
         }
 
-        public IEnumerable<Type> CreateTemplateTypes(IEnumerable<string> razorTemplates, bool parallel = false)
+        public IEnumerable<Type> CreateTemplateTypes(IEnumerable<string> razorTemplates, IEnumerable<Type> modelTypes, bool parallel = false)
         {
-            return _inner.CreateTemplateTypes(razorTemplates, parallel);
+            throw new NotImplementedException();
         }
 
-        public IEnumerable<Type> CreateTemplateTypes(IEnumerable<string> razorTemplates, Type modelType, bool parallel = false)
+        public ITemplate GetTemplate(string razorTemplate, object model, string cacheName)
         {
-            return _inner.CreateTemplateTypes(razorTemplates, modelType, parallel);
+            throw new NotImplementedException();
         }
 
-        public ITemplate GetTemplate(string razorTemplate, string name)
+        public IEnumerable<ITemplate> GetTemplates(IEnumerable<string> razorTemplates, IEnumerable<object> models, IEnumerable<string> cacheNames, bool parallel = false)
         {
-            var template = _inner.GetTemplate(razorTemplate, name);
-            template.TemplateService = this;
-            return template;
+            throw new NotImplementedException();
         }
 
         public ITemplate GetTemplate<T>(string razorTemplate, T model, string name)
@@ -123,6 +96,21 @@ namespace FubuMVC.Razor
         public bool HasTemplate(string name)
         {
             return _inner.HasTemplate(name);
+        }
+
+        public bool RemoveTemplate(string cacheName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string Parse(string razorTemplate, object model, DynamicViewBag viewBag, string cacheName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<string> ParseMany(IEnumerable<string> razorTemplates, IEnumerable<object> models, IEnumerable<DynamicViewBag> viewBags, IEnumerable<string> cacheNames, bool parallel)
+        {
+            throw new NotImplementedException();
         }
 
         public string Parse(string razorTemplate)
@@ -191,6 +179,16 @@ namespace FubuMVC.Razor
             throw new NotImplementedException();
         }
 
+        public string Run(string cacheName, object model, DynamicViewBag viewBag)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string Run(ITemplate template, DynamicViewBag viewBag)
+        {
+            throw new NotImplementedException();
+        }
+
         public ITemplate Resolve<T>(string name, T model)
         {
             var fubuTemplate = _templateRegistry.FirstByName(name);
@@ -226,9 +224,9 @@ namespace FubuMVC.Razor
 
             if (_inner.HasTemplate(viewId) && _lastModifiedCache[descriptor.Template.FilePath] == descriptor.Template.FilePath.LastModified())
             {
-                return GetView(x => (IFubuRazorView)x.Resolve(viewId));
+                return GetView(x => (IFubuRazorView)x.Resolve(viewId, null));
             }
-            return GetView(x => (IFubuRazorView)x.GetTemplate(_fileSystem.ReadStringFromFile(descriptor.Template.FilePath), viewId));
+            return GetView(x => (IFubuRazorView)x.GetTemplate(_fileSystem.ReadStringFromFile(descriptor.Template.FilePath), null, viewId));
         }
 
         public IFubuRazorView GetView(ViewDescriptor<IRazorTemplate> descriptor, object model)
@@ -241,7 +239,7 @@ namespace FubuMVC.Razor
             }
             return GetView(x =>
             {
-                x.GetTemplate(_fileSystem.ReadStringFromFile(descriptor.Template.FilePath), viewId);
+                x.GetTemplate(_fileSystem.ReadStringFromFile(descriptor.Template.FilePath), null, viewId);
                 return (IFubuRazorView)x.Resolve(viewId, model);
             });
         }
