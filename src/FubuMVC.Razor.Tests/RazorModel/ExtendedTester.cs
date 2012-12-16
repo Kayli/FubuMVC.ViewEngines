@@ -67,7 +67,7 @@ namespace FubuMVC.Razor.Tests.RazorModel
 
             var commonNamespaces = new CommonViewNamespaces();
             commonNamespaces.AddForType<string>();
-            _templateFactory = new TemplateFactoryCache(commonNamespaces, razorSettings);
+            _templateFactory = new TemplateFactoryCache(commonNamespaces, razorSettings, new TemplateCompiler(), new RazorTemplateGenerator());
 
             _pak1TemplateRegistry = new TemplateRegistry<IRazorTemplate>(allTemplates.ByOrigin(Package1));
             _pak2TemplateRegistry = new TemplateRegistry<IRazorTemplate>(allTemplates.ByOrigin(Package2));

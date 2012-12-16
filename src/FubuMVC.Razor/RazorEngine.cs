@@ -25,6 +25,8 @@ namespace FubuMVC.Razor
         private void configureServices(ServiceRegistry services)
         {
             services.ReplaceService<ITemplateRegistry<IRazorTemplate>>(_templateRegistry);
+            services.SetServiceIfNone<IRazorTemplateGenerator, RazorTemplateGenerator>();
+            services.SetServiceIfNone<ITemplateCompiler, TemplateCompiler>();
             services.SetServiceIfNone<ITemplateFactory, TemplateFactoryCache>();
             services.ReplaceService<IParsingRegistrations<IRazorTemplate>>(_parsings);
             services.SetServiceIfNone<ITemplateDirectoryProvider<IRazorTemplate>, TemplateDirectoryProvider<IRazorTemplate>>();

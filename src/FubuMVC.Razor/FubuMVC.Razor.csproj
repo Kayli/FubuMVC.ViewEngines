@@ -65,6 +65,8 @@
     <Compile Include="Core\FubuCSharpCodeParser.cs" />
     <Compile Include="Core\FubuCSharpRazorCodeLanguage.cs" />
     <Compile Include="Core\SetModelTypeCodeGenerator.cs" />
+    <Compile Include="RazorModel\RazorTemplateGenerator.cs" />
+    <Compile Include="RazorModel\TemplateCompiler.cs" />
     <Compile Include="Rendering\PositionTagged.cs" />
     <Compile Include="Rendering\AttributeValue.cs" />
     <Compile Include="TemplateFactoryCache.cs" />
