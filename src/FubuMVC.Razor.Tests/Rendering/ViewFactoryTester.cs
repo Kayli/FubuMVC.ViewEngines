@@ -6,7 +6,6 @@ using FubuMVC.Razor.RazorModel;
 using FubuMVC.Razor.Rendering;
 using FubuTestingSupport;
 using NUnit.Framework;
-using RazorEngine.Templating;
 using Rhino.Mocks;
 
 namespace FubuMVC.Razor.Tests.Rendering
@@ -14,7 +13,7 @@ namespace FubuMVC.Razor.Tests.Rendering
     [TestFixture]
     public class ViewFactoryTester : InteractionContext<ViewFactory>
     {
-        private ITemplateService _templateService;
+        private ITemplateFactory _templateFactory;
         private IViewModifierService<IFubuRazorView> _service;
 
         private FubuRazorView _entryView;
@@ -25,7 +24,7 @@ namespace FubuMVC.Razor.Tests.Rendering
             var source = "<h1>hi</h1>";
             var viewId = Guid.NewGuid();
             _service = MockFor<IViewModifierService<IFubuRazorView>>();
-            _templateService = MockFor<ITemplateService>();
+            _templateFactory = MockFor<ITemplateFactory>();
             var fileSystem = MockFor<IFileSystem>();
             fileSystem.Expect(x => x.ReadStringFromFile(null)).Return(source);
 
@@ -34,12 +33,11 @@ namespace FubuMVC.Razor.Tests.Rendering
             var descriptor = new ViewDescriptor<IRazorTemplate>(template);
             Services.Inject(descriptor);
 
-            Services.Inject<IFubuTemplateService>(new FubuTemplateService(new TemplateRegistry<IRazorTemplate>(), _templateService, fileSystem));
+            Services.Inject(_templateFactory);
             _entryView = MockRepository.GenerateMock<StubView>();
             _serviceView = MockRepository.GenerateMock<IFubuRazorView>();
 
-            _templateService.Expect(x => x.HasTemplate(Arg.Is(viewId.ToString()))).Return(false);
-            _templateService.Expect(x => x.GetTemplate(Arg.Is(source), Arg.Is<object>(null), Arg.Is(viewId.ToString()))).Return(_entryView);
+            _templateFactory.Expect(x => x.GetView(Arg.Is(descriptor))).Return(_entryView);
             _service.Expect(x => x.Modify(_entryView)).Return(_serviceView);
         }
 
@@ -47,7 +45,7 @@ namespace FubuMVC.Razor.Tests.Rendering
         public void getview_returns_and_applies_the_service_modifications()
         {
             ClassUnderTest.GetView().ShouldEqual(_serviceView);
-            _templateService.VerifyAllExpectations();
+            _templateFactory.VerifyAllExpectations();
             _service.VerifyAllExpectations();
         }
     }

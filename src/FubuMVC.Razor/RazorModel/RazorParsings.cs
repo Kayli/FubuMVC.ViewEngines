@@ -26,7 +26,8 @@ namespace FubuMVC.Razor.RazorModel
             _parsings[template.FilePath] = new Parsing
             {
                 Master = chunks.Master(),
-                ViewModelType = chunks.ViewModel()
+                ViewModelType = chunks.ViewModel(),
+                Namespaces = chunks.Namespaces()
             };
         }
 

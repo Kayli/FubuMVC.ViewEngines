@@ -46,14 +46,10 @@
     <Reference Include="HtmlTags">
       <HintPath>..\packages\HtmlTags.1.2.0.122\lib\4.0\HtmlTags.dll</HintPath>
     </Reference>
-    <Reference Include="RazorEngine, Version=3.0.8.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
-      <HintPath>..\lib\RazorEngine\RazorEngine.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\RazorEngine.3.0.8\lib\net40\System.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
@@ -66,13 +62,19 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="FubuTemplateService.cs" />
+    <Compile Include="Core\FubuCSharpCodeParser.cs" />
+    <Compile Include="Core\FubuCSharpRazorCodeLanguage.cs" />
+    <Compile Include="Core\SetModelTypeCodeGenerator.cs" />
+    <Compile Include="Rendering\PositionTagged.cs" />
+    <Compile Include="Rendering\AttributeValue.cs" />
+    <Compile Include="TemplateFactoryCache.cs" />
     <Compile Include="RazorEngineSettings.cs" />
     <Compile Include="RazorModel\RazorParsings.cs" />
+    <Compile Include="RazorViewExtensions.cs" />
     <Compile Include="Registration\ViewParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rendering\EncodedString.cs" />
     <Compile Include="Rendering\FubuRazorView.cs" />
+    <Compile Include="Rendering\IPartialRenderer.cs" />
     <Compile Include="Rendering\ViewFactory.cs" />
     <Compile Include="Rendering\ViewModifiers.cs" />
     <Compile Include="RazorActivator.cs" />

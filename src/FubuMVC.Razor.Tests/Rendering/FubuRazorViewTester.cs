@@ -82,22 +82,22 @@ namespace FubuMVC.Razor.Tests.Rendering
             ClassUnderTest.Tag("div").ShouldNotBeNull().TagName().ShouldEqual("div");
         }
 
-        //[Test]
-        //public void html_does_not_encode_value()
-        //{
-        //    const string encodedValue = "&lt;div&gt;";
-        //    ClassUnderTest.Write(encodedValue);
-        //    result.ToString().ShouldEqual(encodedValue);
-        //    result.ToHtmlString().ShouldEqual(encodedValue);
-        //}
+        [Test]
+        public void raw_does_not_encode_value()
+        {
+            const string encodedValue = "&lt;div&gt;";
+            var result = ClassUnderTest.Raw(encodedValue);
+            result.ToString().ShouldEqual(encodedValue);
+            result.ToHtmlString().ShouldEqual(encodedValue);
+        }
 
-        //[Test]
-        //public void html_handles_null_value()
-        //{
-        //    var result = ClassUnderTest.HTML(null);
-        //    result.ToString().ShouldEqual(null);
-        //    result.ToHtmlString().ShouldEqual(null);
-        //}
+        [Test]
+        public void raw_handles_null_value()
+        {
+            var result = ClassUnderTest.Raw(null);
+            result.ToString().ShouldEqual(null);
+            result.ToHtmlString().ShouldEqual(null);
+        }
 
         [Test]
         public void set_model_using_request()
@@ -166,5 +166,8 @@ namespace FubuMVC.Razor.Tests.Rendering
 
     public class SharedView : FubuRazorView<SharedViewModel>
     {
+        public override void Execute()
+        {
+        }
     }
 }

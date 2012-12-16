@@ -1,7 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Web;
 using FubuCore;
+using FubuCore.CommandLine;
 using FubuCore.Util;
 using FubuMVC.Core.Runtime;
 using FubuMVC.Core.Urls;
@@ -9,21 +14,27 @@ using FubuMVC.Core.View;
 using FubuMVC.Core.View.Rendering;
 using FubuMVC.Razor.RazorModel;
 using HtmlTags;
-using RazorEngine.Templating;
-using ITemplate = RazorEngine.Templating.ITemplate;
 
 namespace FubuMVC.Razor.Rendering
 {
-    public abstract class FubuRazorView : TemplateBase, IFubuRazorView
+    public abstract class FubuRazorView : IFubuRazorView
     {
         private readonly Cache<Type, object> _services = new Cache<Type, object>();
+        private readonly IDictionary<string, Action> _sections = new Dictionary<string, Action>();
+        private StringBuilder _output = new StringBuilder();
+        private IFubuRazorView _child;
+        private Action _renderAction;
+        private Func<string> _result;
+        private bool _bodyRendered;
 
         protected FubuRazorView()
         {
             _services.OnMissing = type => ServiceLocator.GetInstance(type);
-            RenderPartialWith = name => base.Include(name, null);
+            _renderAction = RenderNoLayout;
+            _result = () => _output.ToString();
         }
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public IServiceLocator ServiceLocator { get; set; }
 
         public T Get<T>()
@@ -36,154 +47,207 @@ namespace FubuMVC.Razor.Rendering
             return (T)ServiceLocator.GetInstance(typeof(T));
         }
 
-        protected override ITemplate ResolveLayout(string name)
-        {
-            return LayoutTemplate;
-        }
-
         public IUrlRegistry Urls
         {
             get { return Get<IUrlRegistry>(); }
         }
 
-        public Func<string, TemplateWriter> RenderPartialWith { get; set; }
-
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public void UseLayout(IFubuRazorView layout)
         {
             LayoutTemplate = layout;
-            if (Layout == null)
-            {
-                Layout = LayoutTemplate.GetType().FullName;
-            }
+            Layout = LayoutTemplate.GetType().FullName;
+            _renderAction = RenderWithLayout;
+            _result = () => layout.Result.ToString();
         }
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public void NoLayout()
         {
-            LayoutTemplate = null;
-            Layout = null;
+            _renderAction = RenderNoLayout;
         }
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public virtual void Execute()
+        {
+            //for razor
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public void ExecuteLayout(IFubuRazorView child)
+        {
+            _child = child;
+            _renderAction();
+        }
+
+        public string Layout { get; set; }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public IRazorTemplate OriginTemplate { get; set; }
 
         string IFubuPage.ElementPrefix { get; set; }
 
-        void IRenderableView.Render()
+        private void RenderNoLayout()
         {
-            var result = ((ITemplate) this).Run(new ExecuteContext());
-            Get<IOutputWriter>().WriteHtml(result);
+            Execute();
         }
 
-        public IFubuPage Page { 
-            get { return this; }
+        private void RenderWithLayout()
+        {
+            Execute();
+            LayoutTemplate.ExecuteLayout(this);
         }
 
-        void IFubuRazorView.RenderPartial()
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public void Render()
         {
-            Layout = null;
-            ((IFubuRazorView)this).Render();
+            _renderAction();
+            Get<IOutputWriter>().WriteHtml(Result);
         }
+
+        public HtmlString RenderBody()
+        {
+            if(_child == null)
+                throw new InvalidUsageException("RenderBody must be called from a layout template");
+
+            return new HtmlString(_child.CurrentOutput);
+        }
+
+        public HtmlString RenderSection(string name, bool required = true)
+        {
+            if (!_sections.ContainsKey(name))
+            {
+                if (_child == null)
+                {
+                    if(required) 
+                        throw new InvalidUsageException("No section has been defined for required '{0}'".ToFormat(name));
+                    return null;
+                }
+                return _child.RenderSection(name, required);
+            }
+            Action section = _sections[name];
+
+            var current = _output;
+            _output = new StringBuilder();
+            var output = _output;
+            section();
+            _output = current;
+            return new HtmlString(output.ToString());
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public void DefineSection(string name, Action section)
+        {
+            _sections[name] = section;
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public IFubuPage Page { get { return this; } }
 
         public HtmlTag Tag(string tagName)
         {
             return new HtmlTag(tagName);
         }
 
-        public override void Write(object value)
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public void Write(object value)
         {
-            if(value is IHtmlString)
-                base.Write(new EncodedString(value));
+            if (value is HtmlString)
+            {
+                WriteLiteral(value.ToString());
+            }
             else
-                base.Write(value);
+            {
+                WriteLiteral(WebUtility.HtmlEncode(value.ToString()));
+            }
         }
 
-        public override TemplateWriter Include(string cacheName, object model)
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        protected virtual void WriteAttribute(string name,  PositionTagged<string> start, PositionTagged<string> end, params AttributeValue[] args)
         {
-            throw new NotSupportedException("Overload with model is not supported");
+            var totalArgWritten = 0;
+            foreach (var attributeValue in args)
+            {
+                if (attributeValue.Value.Value == null)
+                    continue;
+
+                totalArgWritten++;
+                if (totalArgWritten == 1)
+                    WriteLiteral(start.Value);
+
+                Write(attributeValue.Value.Value);
+            }
+
+            if (totalArgWritten > 0)
+            {
+                WriteLiteral(end.Value);
+            }
         }
 
-        public TemplateWriter Include(string name)
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public void WriteLiteral(string value)
         {
-            return RenderPartialWith(name);
+            _output.Append(value);
         }
 
-        public ITemplate LayoutTemplate { get; set; }
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public IFubuRazorView LayoutTemplate { get; set; }
+
+        public HtmlString Raw(string rawContent)
+        {
+            return new HtmlString(rawContent);
+        }
+
+        public HtmlString Result
+        {
+            get { return new HtmlString(_result()); }
+        }
+
+        public string CurrentOutput { get { return _output.ToString(); } }
     }
 
-    public abstract class FubuRazorView<TViewModel> : FubuRazorView, IFubuRazorView, IFubuPage<TViewModel> where TViewModel : class
+    public abstract class FubuRazorView<TViewModel> : FubuRazorView, IFubuPage<TViewModel> where TViewModel : class
     {
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public void SetModel(IFubuRequest request)
         {
-            TViewModel model;
-            if (request.Has<TViewModel>())
-            {
-                model = request.Get<TViewModel>();
-            }
-            else
-            {
-                model = request.Find<TViewModel>().FirstOrDefault();
-            }
+            var model = request.Has<TViewModel>() ? request.Get<TViewModel>() : request.Find<TViewModel>().FirstOrDefault();
             SetModel(model);
         }
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public void SetModel(object model)
         {
             SetModel(model as TViewModel);
         }
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public void SetModel(TViewModel model)
         {
             Model = model;
         }
 
-        void IRenderableView.Render()
-        {
-            var result = ((ITemplate) this).Run(new ExecuteContext());
-            Get<IOutputWriter>().WriteHtml(result);
-        }
+        public TViewModel Model { get; set; }
 
-        void IFubuRazorView.RenderPartial()
-        {
-            Layout = null;
-            ((IFubuRazorView)this).Render();
-        }
-
-        //TODO: Temporary hack, this won't be needed after ripping out the base class from RazorEngine
-        private TViewModel _model;
-        public TViewModel Model
-        {
-            get
-            {
-                if (_model == null)
-                {
-                    SetModel(ServiceLocator.GetInstance<IFubuRequest>());
-                }
-                return _model;
-            }
-            set { _model = value; }
-        }
-
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public object GetModel()
         {
             return Model;
         }
     }
 
-    public interface IFubuRazorView : IRenderableView, ITemplate, IFubuPage
+    public interface IFubuRazorView : IRenderableView, IFubuPage
     {
-        void RenderPartial();
-        ITemplate LayoutTemplate { get; }
+        HtmlString Result { get; }
+        IFubuRazorView LayoutTemplate { get; }
         void UseLayout(IFubuRazorView layout);
         void NoLayout();
         IRazorTemplate OriginTemplate { get; set; }
-        Func<string, TemplateWriter> RenderPartialWith { get; set; }
-    }
-
-    public static class FubuRazorViewExtensions
-    {
-        public static IFubuRazorView Modify(this IFubuRazorView view, Action<IFubuRazorView> modify)
-        {
-            modify(view);
-            return view;
-        }
+        string CurrentOutput { get; }
+        void Execute();
+        void ExecuteLayout(IFubuRazorView child);
+        HtmlString RenderBody();
+        HtmlString RenderSection(string name, bool required = true);
+        void DefineSection(string name, Action sectionAction);
     }
 }

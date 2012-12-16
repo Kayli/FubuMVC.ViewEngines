@@ -1,8 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Web;
 using FubuCore;
 using FubuCore.Util;
 using FubuMVC.Core.View.Model;
 using FubuMVC.Razor.RazorModel;
+using FubuMVC.Razor.Rendering;
 
 namespace FubuMVC.Razor
 {
@@ -14,6 +18,12 @@ namespace FubuMVC.Razor
         {
             defaultSearch();
             defaultComposer();
+            defaultTemplateType();
+        }
+
+        private void defaultTemplateType()
+        {
+            BaseTemplateType = typeof(FubuRazorView);
         }
 
         private void defaultSearch()
@@ -49,6 +59,13 @@ namespace FubuMVC.Razor
             _configurations.Do(composer);
         }
 
+        public void UseBaseTemplateType<TTemplate>() where TTemplate : FubuRazorView
+        {
+            BaseTemplateType = typeof(TTemplate);
+        }
+
         public FileSet Search { get; private set; }
+
+        public Type BaseTemplateType { get; private set; }
     }
 }

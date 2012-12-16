@@ -5,7 +5,6 @@ using FubuMVC.Core.View;
 using FubuMVC.Core.View.Model;
 using FubuMVC.Razor.RazorModel;
 using FubuMVC.Razor.Rendering;
-using RazorEngine.Templating;
 
 namespace FubuMVC.Razor
 {
@@ -31,7 +30,7 @@ namespace FubuMVC.Razor
 
         public Type ViewType
         {
-            get { return typeof (ITemplate); }
+            get { return typeof (IRazorTemplate); }
         }
 
         public Type ViewModel

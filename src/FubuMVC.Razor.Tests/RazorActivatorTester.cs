@@ -4,64 +4,48 @@ using System.Linq;
 using System.Web;
 using Bottles;
 using Bottles.Diagnostics;
-using FubuCore;
 using FubuMVC.Core.UI;
 using FubuMVC.Core.View;
-using FubuMVC.Core.View.Model;
-using FubuMVC.Razor.RazorModel;
-using FubuMVC.Razor.Rendering;
 using FubuTestingSupport;
 using HtmlTags;
 using NUnit.Framework;
-using RazorEngine.Configuration;
-using RazorEngine.Templating;
 
 namespace FubuMVC.Razor.Tests
 {
     [TestFixture]
     public class RazorActivatorTester : InteractionContext<RazorActivator>
     {
-        private ITemplateServiceConfiguration _config;
+        private CommonViewNamespaces _commonViewNamespaces;
 
         protected override void beforeEach()
         {
-            _config = new TemplateServiceConfiguration();
-            _config.Namespaces.Clear();
-            var templateService = new FubuTemplateService(new TemplateRegistry<IRazorTemplate>(),  new TemplateService(_config), new FileSystem());
+            _commonViewNamespaces = new CommonViewNamespaces();
+            _commonViewNamespaces.Add("Foo");
+            _commonViewNamespaces.Add("Bar");
 
-            var commonViewNamespaces = new CommonViewNamespaces();
-            commonViewNamespaces.Add("Foo");
-            commonViewNamespaces.Add("Bar");
+            Services.Inject(_commonViewNamespaces);
 
-            Services.Inject(commonViewNamespaces);
-
-            Services.Inject(_config);
-            Services.Inject<IFubuTemplateService>(templateService);
             ClassUnderTest.Activate(Enumerable.Empty<IPackageInfo>(), MockFor<IPackageLog>());
         }
 
         [Test]
         public void default_namespaces_are_set_including_anything_from_CommonViewNamespaces()
         {
-            var useNamespaces = _config.Namespaces;
+            var useNamespaces = _commonViewNamespaces.Namespaces;
             useNamespaces.Each(x => Debug.WriteLine(x));
 
             useNamespaces.ShouldHaveTheSameElementsAs(new[]
             { 
+                "Foo",
+                "Bar",
                 typeof(VirtualPathUtility).Namespace,
                 typeof(RazorViewFacility).Namespace,
                 typeof(IPartialInvoker).Namespace,
                 typeof(HtmlTag).Namespace,
-
-                "Foo",
-                "Bar"
+                typeof(string).Namespace
             });
         }
 
-        [Test]
-        public void default_page_base_type_is_fuburazorview()
-        {
-            _config.BaseTemplateType.ShouldEqual(typeof(FubuRazorView));
-        }
+       
     }
 }

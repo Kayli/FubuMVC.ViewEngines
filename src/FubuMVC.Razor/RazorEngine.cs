@@ -7,8 +7,6 @@ using FubuMVC.Core.View.Model.Sharing;
 using FubuMVC.Core.View.Rendering;
 using FubuMVC.Razor.Rendering;
 using FubuMVC.Razor.RazorModel;
-using RazorEngine.Configuration;
-using RazorEngine.Templating;
 using IActivator = Bottles.IActivator;
 
 namespace FubuMVC.Razor
@@ -26,14 +24,12 @@ namespace FubuMVC.Razor
 
         private void configureServices(ServiceRegistry services)
         {
-            var configuration = new TemplateServiceConfiguration {BaseTemplateType = typeof (FubuRazorView)};
-
             services.ReplaceService<ITemplateRegistry<IRazorTemplate>>(_templateRegistry);
-            services.ReplaceService<IFubuTemplateService>(new FubuTemplateService(_templateRegistry, new TemplateService(configuration), new FileSystem()));
-            services.ReplaceService<ITemplateServiceConfiguration>(configuration);
+            services.SetServiceIfNone<ITemplateFactory, TemplateFactoryCache>();
             services.ReplaceService<IParsingRegistrations<IRazorTemplate>>(_parsings);
             services.SetServiceIfNone<ITemplateDirectoryProvider<IRazorTemplate>, TemplateDirectoryProvider<IRazorTemplate>>();
             services.SetServiceIfNone<ISharedPathBuilder>(new SharedPathBuilder());
+            services.SetServiceIfNone<IPartialRenderer, PartialRenderer>();
 
             var graph = new SharingGraph();
             services.SetServiceIfNone(graph);
@@ -52,7 +48,6 @@ namespace FubuMVC.Razor
             services.SetServiceIfNone<IViewModifierService<IFubuRazorView>, ViewModifierService<IFubuRazorView>>();
 
             services.FillType<IViewModifier<IFubuRazorView>, LayoutActivation>();
-            services.FillType<IViewModifier<IFubuRazorView>, PartialRendering>();
             services.FillType<IViewModifier<IFubuRazorView>, FubuPartialRendering>();
         }
     }

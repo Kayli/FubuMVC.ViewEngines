@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Web.Razor;
-using System.Web.Razor.Parser;
 using System.Web.Razor.Parser.SyntaxTree;
+using FubuMVC.Razor.Core;
 using FubuMVC.Razor.RazorModel;
-using CSharpRazorCodeLanguage = RazorEngine.Compilation.CSharp.CSharpRazorCodeLanguage;
-using VBRazorCodeLanguage = RazorEngine.Compilation.VisualBasic.VBRazorCodeLanguage;
 
 namespace FubuMVC.Razor.Registration
 {
@@ -18,11 +16,11 @@ namespace FubuMVC.Razor.Registration
             switch (viewFile.FileExtension())
             {
                 case ".cshtml":
-                    language = new CSharpRazorCodeLanguage(true);
+                    language = new FubuCSharpRazorCodeLanguage();
                     break;
-                case ".vbhtml":
-                    language = new VBRazorCodeLanguage(true);
-                    break;
+                //case ".vbhtml":
+                //    language = new VBRazorCodeLanguage(true);
+                //    break;
                 default:
                     throw new ArgumentException("Invalid extension for Razor engine.");
             }
@@ -30,8 +28,8 @@ namespace FubuMVC.Razor.Registration
             using (var fileStream = new FileStream(viewFile, FileMode.Open, FileAccess.Read))
             using (var reader = new StreamReader(fileStream))
             {
-                var engine = new RazorTemplateEngine(new RazorEngine.Compilation.RazorEngineHost(language, () => new HtmlMarkupParser()));
-                var parseResults = engine.ParseTemplate(reader);
+                var templateEngine = new RazorTemplateEngine(new RazorEngineHost(new FubuCSharpRazorCodeLanguage()));
+                var parseResults = templateEngine.ParseTemplate(reader);
                 return parseResults.Document.Flatten();
             }
         }

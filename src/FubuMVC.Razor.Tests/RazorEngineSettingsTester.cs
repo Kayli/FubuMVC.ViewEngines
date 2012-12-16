@@ -1,4 +1,5 @@
 using FubuMVC.Core.Runtime.Files;
+using FubuMVC.Razor.Rendering;
 using FubuTestingSupport;
 using NUnit.Framework;
 
@@ -44,6 +45,12 @@ namespace FubuMVC.Razor.Tests
 
             files.ShouldNotHave(f => f.Path.EndsWith("A3.cshtml"));
             files.ShouldNotHave(f => f.Path.EndsWith("A4.cshtml"));
+        }
+
+        [Test]
+        public void default_page_base_type_is_fuburazorview()
+        {
+            ClassUnderTest.BaseTemplateType.ShouldEqual(typeof(FubuRazorView));
         }
     }
 }
