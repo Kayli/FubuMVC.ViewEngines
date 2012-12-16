@@ -19,14 +19,15 @@ namespace FubuMVC.Spark
         private readonly ISparkViewEngine _engine;
         private readonly CommonViewNamespaces _namespaces;
         readonly ITemplateDirectoryProvider<ITemplate> _directoryProvider;
+        private readonly SparkEngineSettings _settings;
 
-        public SparkActivator (ISparkTemplateRegistry templateRegistry, ISparkViewEngine engine, CommonViewNamespaces namespaces,
-            ITemplateDirectoryProvider<ITemplate> directoryProvider)
+        public SparkActivator (ISparkTemplateRegistry templateRegistry, ISparkViewEngine engine, CommonViewNamespaces namespaces, ITemplateDirectoryProvider<ITemplate> directoryProvider, SparkEngineSettings settings)
         {
             _templateRegistry = templateRegistry;
             _engine = engine;
             _namespaces = namespaces;
             _directoryProvider = directoryProvider;
+            _settings = settings;
         }
 
         public void Activate (IEnumerable<IPackageInfo> packages, IPackageLog log)
@@ -51,6 +52,8 @@ namespace FubuMVC.Spark
                 .AddNamespace (typeof(HtmlTag).Namespace); // HtmlTags   
 
             _namespaces.Namespaces.Each(x => settings.AddNamespace(x));
+
+            _settings.UseNamespaces.Each(ns => settings.AddNamespace(ns));
 
             log.Trace("Adding assemblies to SparkSettings:");
             settings.UseAssemblies.Each(x => log.Trace("  - {0}".ToFormat(x)));

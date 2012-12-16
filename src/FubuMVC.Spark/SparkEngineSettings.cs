@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using FubuCore;
 using FubuCore.Util;
 using FubuMVC.Core.View.Model;
@@ -48,6 +49,20 @@ namespace FubuMVC.Spark
         public void Configure(TemplateComposer<ITemplate> composer)
         {
             _configurations.Do(composer);
+        }
+
+        /// <summary>
+        /// List of namespaces that will be applied as global namespaces to the SparkViewEngine
+        /// </summary>
+        public readonly IList<string> UseNamespaces = new List<string>();
+
+        /// <summary>
+        /// Adds a namespace to UseNamespaces
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public void UseNamespaceIncludingType<T>()
+        {
+            UseNamespaces.Add(typeof(T).Name);
         }
 
         public FileSet Search { get; private set; }
