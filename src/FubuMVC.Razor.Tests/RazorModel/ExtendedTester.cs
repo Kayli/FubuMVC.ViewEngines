@@ -231,9 +231,9 @@ namespace FubuMVC.Razor.Tests.RazorModel
             var cuatroView = _pak1TemplateRegistry.FirstByName("SerieX");
             var master = _pak1TemplateRegistry.FirstByName("Maker");
 
-            getViewSource(cuatroView).ShouldEqual("@{ Layout = \"Maker\"; } @section sectiontest { from section } SerieX");
+            getViewSource(cuatroView).ShouldEqual("@layout Maker \r\n@section sectiontest { from section } SerieX");
             var template = renderTemplate(cuatroView, master);
-            template.ShouldEqual("Lenovo   SerieX  from section ");
+            template.ShouldEqual("Lenovo  SerieX  from section ");
         }
 
         [Test]

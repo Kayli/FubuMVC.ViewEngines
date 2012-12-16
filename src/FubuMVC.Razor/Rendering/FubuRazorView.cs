@@ -56,7 +56,6 @@ namespace FubuMVC.Razor.Rendering
         public void UseLayout(IFubuRazorView layout)
         {
             LayoutTemplate = layout;
-            Layout = LayoutTemplate.GetType().FullName;
             _renderAction = RenderWithLayout;
             _result = () => layout.Result.ToString();
         }
@@ -80,6 +79,7 @@ namespace FubuMVC.Razor.Rendering
             _renderAction();
         }
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public string Layout { get; set; }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
