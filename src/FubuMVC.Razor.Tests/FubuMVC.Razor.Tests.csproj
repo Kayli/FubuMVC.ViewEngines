@@ -144,6 +144,9 @@
     <None Include="Templates\App\fubu-packages\Package1\WebContent\Handlers\Shared\_fail.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Templates\HasEmptyMaster.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Templates\ToParse.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

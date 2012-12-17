@@ -21,6 +21,14 @@ namespace FubuMVC.Razor.Tests.Registration
         }
 
         [Test]
+        public void can_be_empty_master()
+        {
+            var parser = new ViewParser();
+            var results = parser.Parse("Templates/HasEmptyMaster.cshtml");
+            results.Master().ShouldEqual(string.Empty);
+        }
+
+        [Test]
         public void will_parse_master()
         {
             _results.Master().ShouldEqual("MyLayout");

@@ -149,7 +149,7 @@ namespace FubuMVC.Razor.Rendering
         [EditorBrowsable(EditorBrowsableState.Never)]
         public void Write(object value)
         {
-            if (value is HtmlString)
+            if (value is IHtmlString)
             {
                 WriteLiteral(value.ToString());
             }

@@ -43,6 +43,9 @@
     <Reference Include="FubuMVC.Core">
       <HintPath>..\packages\FubuMVC.Core.0.9.9.1306\lib\net40\FubuMVC.Core.dll</HintPath>
     </Reference>
+    <Reference Include="FubuMVC.Core.UI">
+      <HintPath>..\packages\FubuMVC.Core.UI.0.9.9.103\lib\net40\FubuMVC.Core.UI.dll</HintPath>
+    </Reference>
     <Reference Include="FubuMVC.SelfHost">
       <HintPath>..\packages\FubuMVC.SelfHost.0.9.9.1306\lib\net40\FubuMVC.SelfHost.dll</HintPath>
     </Reference>
@@ -123,6 +126,8 @@
     <Compile Include="ViewEngines\Razor\MultipleLayouts\Features\One\UsesClosest\ClosestController.cs" />
     <Compile Include="ViewEngines\Razor\MultipleLayouts\Features\Two\UsesDefault\UsesDefaultController.cs" />
     <Compile Include="ViewEngines\Razor\MultipleLayouts\RazorEngineMultipleLayoutsIntegrationTester.cs" />
+    <Compile Include="ViewEngines\Razor\PageExtensions\PageExtensionsController.cs" />
+    <Compile Include="ViewEngines\Razor\PageExtensions\RazorPageExtensionsIntegrationTester.cs" />
     <Compile Include="ViewEngines\Spark\Activation\ActivationTest.cs" />
     <Compile Include="ViewEngines\Spark\HelloSpark\AirEndpoint.cs" />
     <Compile Include="ViewEngines\Spark\HelloSpark\PartialsWithSparkIntegrationTester.cs" />
@@ -156,6 +161,9 @@
     <Content Include="ViewEngines\Razor\MultipleLayouts\Features\Two\UsesDefault\UsesDefault.cshtml" />
     <Content Include="ViewEngines\Razor\MultipleLayouts\Shared\Application.cshtml" />
     <Content Include="ViewEngines\Razor\MultipleLayouts\Shared\Html.cshtml" />
+    <Content Include="ViewEngines\Razor\PageExtensions\PageExtensions.cshtml" />
+    <Content Include="ViewEngines\Razor\PageExtensions\Shared\_withoutmodel.cshtml" />
+    <Content Include="ViewEngines\Razor\PageExtensions\Shared\_withmodel.cshtml" />
     <None Include="ViewEngines\Spark\Activation\Activation.spark" />
     <None Include="ViewEngines\Spark\HelloSpark\Breathe.spark" />
     <None Include="ViewEngines\Spark\HelloSpark\Full.spark" />

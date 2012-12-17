@@ -85,7 +85,7 @@ namespace FubuMVC.Razor.Tests.RazorModel
             _sharedTemplateLocator = new SharedTemplateLocator<IRazorTemplate>(templateDirectory, allTemplates,
                                                                                new RazorTemplateSelector());
 
-            var partialRenderer = new PartialRenderer(_sharedTemplateLocator, _templateFactory, viewModifier, MockRepository.GenerateMock<IFubuRequest>());
+            var partialRenderer = new PartialRenderer(_sharedTemplateLocator, _templateFactory);
             _serviceLocator.Expect(x => x.GetInstance(Arg.Is(typeof (IPartialRenderer)))).Return(partialRenderer);
             _serviceLocator.Expect(x => x.GetInstance(typeof (IOutputWriter))).Return(MockRepository.GenerateMock<IOutputWriter>());
         }

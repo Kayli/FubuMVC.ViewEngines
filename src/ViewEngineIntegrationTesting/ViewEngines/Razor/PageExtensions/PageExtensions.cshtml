@@ -1,0 +1,8 @@
+﻿@model ViewEngineIntegrationTesting.ViewEngines.Razor.PageExtensions.PageExtensionsViewModel
+@using ViewEngineIntegrationTesting.ViewEngines.Razor.PageExtensions
+
+@Model.Message
+@this.RenderPartial("withoutmodel")
+@this.RenderPartial("withmodel", new ViewEngineIntegrationTesting.ViewEngines.Razor.PageExtensions.PartialModel{Message = "From view"})
+@this.LinkTo(new LinkToInputModel())
+<div id="null" class="@null" title=""></div>
