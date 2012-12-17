@@ -62,8 +62,11 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Core\FubuVBCodeParser.cs" />
+    <Compile Include="Core\FubuVBRazorCodeLanguage.cs" />
     <Compile Include="Core\FubuCSharpCodeParser.cs" />
     <Compile Include="Core\FubuCSharpRazorCodeLanguage.cs" />
+    <Compile Include="Core\RazorCodeLanguageFactory.cs" />
     <Compile Include="Core\SetModelTypeCodeGenerator.cs" />
     <Compile Include="RazorModel\RazorTemplateGenerator.cs" />
     <Compile Include="RazorModel\TemplateCompiler.cs" />

@@ -62,7 +62,8 @@ namespace FubuMVC.Razor
             var baseTemplateType = _razorEngineSettings.BaseTemplateType;
             var generatedClassContext = new GeneratedClassContext("Execute", "Write", "WriteLiteral", null, null,
                                                                   className, "DefineSection");
-            var host = new RazorEngineHost(new FubuCSharpRazorCodeLanguage())
+            var codeLanguage = RazorCodeLanguageFactory.Create(descriptor.Template.FilePath.FileExtension());
+            var host = new RazorEngineHost(codeLanguage)
             {
                 DefaultBaseClass = baseTemplateType.FullName,
                 DefaultNamespace = "FubuMVC.Razor.GeneratedTemplates",
