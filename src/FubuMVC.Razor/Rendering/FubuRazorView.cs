@@ -53,7 +53,7 @@ namespace FubuMVC.Razor.Rendering
 
         void IFubuRazorView.UseLayout(IFubuRazorView layout)
         {
-            LayoutTemplate = layout;
+            LayoutView = layout;
             _renderAction = RenderWithLayout;
             _result = () => layout.Result.ToString();
         }
@@ -88,7 +88,7 @@ namespace FubuMVC.Razor.Rendering
         private void RenderWithLayout()
         {
             Execute();
-            LayoutTemplate.ExecuteLayout(this);
+            LayoutView.ExecuteLayout(this);
         }
 
         void IRenderableView.Render()
@@ -183,7 +183,7 @@ namespace FubuMVC.Razor.Rendering
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public IFubuRazorView LayoutTemplate { get; set; }
+        public IFubuRazorView LayoutView { get; set; }
 
         public HtmlString Raw(string rawContent)
         {
@@ -233,7 +233,7 @@ namespace FubuMVC.Razor.Rendering
     public interface IFubuRazorView : IRenderableView, IFubuPage
     {
         HtmlString Result { get; }
-        IFubuRazorView LayoutTemplate { get; }
+        IFubuRazorView LayoutView { get; }
         void UseLayout(IFubuRazorView layout);
         void NoLayout();
         IRazorTemplate OriginTemplate { get; set; }

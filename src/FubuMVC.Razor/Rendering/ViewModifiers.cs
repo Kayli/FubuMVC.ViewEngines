@@ -7,10 +7,10 @@ namespace FubuMVC.Razor.Rendering
     {
         public override IFubuRazorView Modify(IFubuRazorView view)
         {
-            if (view.LayoutTemplate != null)
+            if (view.LayoutView != null)
             {
-                view.LayoutTemplate.As<IFubuRazorView>().ServiceLocator = view.ServiceLocator;
-                Modify(view.LayoutTemplate.As<IFubuRazorView>());
+                view.LayoutView.As<IFubuRazorView>().ServiceLocator = view.ServiceLocator;
+                Modify(view.LayoutView.As<IFubuRazorView>());
             }
             return view;
         }
