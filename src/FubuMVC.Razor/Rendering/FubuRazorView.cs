@@ -67,10 +67,7 @@ namespace FubuMVC.Razor.Rendering
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public virtual void Execute()
-        {
-            //for razor
-        }
+        public abstract void Execute();
 
         [EditorBrowsable(EditorBrowsableState.Never)]
         public void ExecuteLayout(IFubuRazorView child)

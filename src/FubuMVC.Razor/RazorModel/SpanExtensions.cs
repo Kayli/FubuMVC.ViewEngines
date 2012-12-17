@@ -20,7 +20,7 @@ namespace FubuMVC.Razor.RazorModel
 
         public static IEnumerable<string> Namespaces(this IEnumerable<Span> chunks)
         {
-            return chunks.Select(x => x.CodeGenerator).OfType<AddImportCodeGenerator>().Select(x => x.Namespace);
+            return chunks.Select(x => x.CodeGenerator).OfType<AddImportCodeGenerator>().Select(x => x.Namespace.Trim());
         }
     }
 }

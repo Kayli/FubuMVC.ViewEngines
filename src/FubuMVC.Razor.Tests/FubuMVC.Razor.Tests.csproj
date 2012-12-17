@@ -85,6 +85,7 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="RazorModel\LayoutAttacherTester.cs" />
+    <Compile Include="Registration\ViewParserTester.cs" />
     <Compile Include="Rendering\AjaxRenderStrategyTester.cs" />
     <Compile Include="Rendering\FubuPartialRenderingTester.cs" />
     <Compile Include="Rendering\RenderActionTester.cs" />
@@ -141,6 +142,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\App\fubu-packages\Package1\WebContent\Handlers\Shared\_fail.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\ToParse.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\Home\file.foo">
