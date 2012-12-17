@@ -25,7 +25,6 @@ namespace FubuMVC.Razor.Rendering
         private IFubuRazorView _child;
         private Action _renderAction;
         private Func<string> _result;
-        private bool _bodyRendered;
 
         protected FubuRazorView()
         {
@@ -52,16 +51,14 @@ namespace FubuMVC.Razor.Rendering
             get { return Get<IUrlRegistry>(); }
         }
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public void UseLayout(IFubuRazorView layout)
+        void IFubuRazorView.UseLayout(IFubuRazorView layout)
         {
             LayoutTemplate = layout;
             _renderAction = RenderWithLayout;
             _result = () => layout.Result.ToString();
         }
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public void NoLayout()
+        void IFubuRazorView.NoLayout()
         {
             _renderAction = RenderNoLayout;
         }
@@ -70,7 +67,7 @@ namespace FubuMVC.Razor.Rendering
         public abstract void Execute();
 
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public void ExecuteLayout(IFubuRazorView child)
+        void IFubuRazorView.ExecuteLayout(IFubuRazorView child)
         {
             _child = child;
             _renderAction();
@@ -79,8 +76,7 @@ namespace FubuMVC.Razor.Rendering
         [EditorBrowsable(EditorBrowsableState.Never)]
         public string Layout { get; set; }
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public IRazorTemplate OriginTemplate { get; set; }
+        IRazorTemplate IFubuRazorView.OriginTemplate { get; set; }
 
         string IFubuPage.ElementPrefix { get; set; }
 
@@ -95,11 +91,10 @@ namespace FubuMVC.Razor.Rendering
             LayoutTemplate.ExecuteLayout(this);
         }
 
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public void Render()
+        void IRenderableView.Render()
         {
             _renderAction();
-            Get<IOutputWriter>().WriteHtml(Result);
+            Get<IOutputWriter>().WriteHtml(this.As<IFubuRazorView>().Result);
         }
 
         public HtmlString RenderBody()
@@ -160,7 +155,7 @@ namespace FubuMVC.Razor.Rendering
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
-        protected virtual void WriteAttribute(string name,  PositionTagged<string> start, PositionTagged<string> end, params AttributeValue[] args)
+        protected void WriteAttribute(string name,  PositionTagged<string> start, PositionTagged<string> end, params AttributeValue[] args)
         {
             var totalArgWritten = 0;
             foreach (var attributeValue in args)
@@ -195,12 +190,14 @@ namespace FubuMVC.Razor.Rendering
             return new HtmlString(rawContent);
         }
 
-        public HtmlString Result
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        HtmlString IFubuRazorView.Result
         {
             get { return new HtmlString(_result()); }
         }
 
-        public string CurrentOutput { get { return _output.ToString(); } }
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        string IFubuRazorView.CurrentOutput { get { return _output.ToString(); } }
     }
 
     public abstract class FubuRazorView<TViewModel> : FubuRazorView, IFubuPage<TViewModel> where TViewModel : class

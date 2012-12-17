@@ -75,8 +75,6 @@ namespace FubuMVC.Razor.Tests.RazorModel
 
             _serviceLocator = MockRepository.GenerateMock<IServiceLocator>();
 
-            var viewModifier = new ViewModifierService<IFubuRazorView>(new[] {new LayoutActivation()});
-
             var sharingGraph = new SharingGraph();
             sharingGraph.Dependency("Package1", ContentFolder.Application);
             sharingGraph.Dependency("Package2", ContentFolder.Application);
@@ -116,9 +114,9 @@ namespace FubuMVC.Razor.Tests.RazorModel
 
             var modifier = new ViewModifierService<IFubuRazorView>(Enumerable.Empty<IViewModifier<IFubuRazorView>>());
             var viewFactory = new ViewFactory(descriptor, _templateFactory, modifier);
-            var view = (FubuRazorView)viewFactory.GetView();
+            var view = (IFubuRazorView)viewFactory.GetView();
             view.ServiceLocator = _serviceLocator;
-            view.Render();
+            view.As<IRenderableView>().Render();
             return view.Result.ToString();
         }
 
