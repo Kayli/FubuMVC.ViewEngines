@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using FubuCore;
 using FubuMVC.Core.View.Model;
 using FubuMVC.Spark.SparkModel;
 using FubuTestingSupport;
@@ -16,7 +17,7 @@ namespace FubuMVC.Spark.Tests.SparkModel
 
         protected override void beforeEach()
         {
-            _viewPath = @"_Package\Handlers\Models\test.spark";
+            _viewPath = FileSystem.Combine("_Package", "Handlers", "Models", "test.spark");// @"_Package\Handlers\Models\test.spark");
             _templateDirectoryProvider = MockFor<ITemplateDirectoryProvider<ITemplate>>();
             _sharedTemplates = new List<string>();
             _templateDirectoryProvider
@@ -30,12 +31,12 @@ namespace FubuMVC.Spark.Tests.SparkModel
             var paths = ClassUnderTest.GetPaths(_viewPath);
             paths.ShouldHaveTheSameElementsAs(new[]
             {
-                @"_Package\Handlers\Models",
-                @"_Package\Handlers\Models\Shared",
-                @"_Package\Handlers",
-                @"_Package\Handlers\Shared",
+                FileSystem.Combine("_Package", "Handlers", "Models"),
+                FileSystem.Combine("_Package", "Handlers", "Models", "Shared"),
+                FileSystem.Combine("_Package", "Handlers"),
+                FileSystem.Combine("_Package", "Handlers", "Shared"),
                 @"_Package",
-                @"_Package\Shared",
+                FileSystem.Combine("_Package", "Shared"),
                 @"",
                 @"Shared",
             });
@@ -44,7 +45,7 @@ namespace FubuMVC.Spark.Tests.SparkModel
         [Test]
         public void get_paths_also_includes_any_shared_view_paths_for_origin()
         {
-            const string sharedTemplate = @"_Global\Shared";
+            string sharedTemplate = FileSystem.Combine("_Global", "Shared");
             _sharedTemplates.Add(sharedTemplate);
             var paths = ClassUnderTest.GetPaths(_viewPath);
             paths.ShouldContain(sharedTemplate);
@@ -58,6 +59,7 @@ namespace FubuMVC.Spark.Tests.SparkModel
                 @"_Package",
                 @"_Package\Shared",
                 @"_Package\Shared\Folder",
+                @"_Package/Shared", //Mono path
                 @"Package\",
                 @"_Package\",
             };

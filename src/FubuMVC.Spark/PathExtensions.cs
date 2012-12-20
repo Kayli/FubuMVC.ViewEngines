@@ -4,7 +4,7 @@ namespace FubuMVC.Spark
 {
     public static class PathExtensions
     {
-        private static readonly Regex _parseOriginRegex = new Regex(@"_?([^\\]+)\\?", RegexOptions.Compiled);
+        private static readonly Regex _parseOriginRegex = new Regex(@"_?([^\\/]+)[\\/]?", RegexOptions.Compiled);
 
         public static string GetOrigin(this string path)
         {

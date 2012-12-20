@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using FubuCore;
 using FubuMVC.Core.View.Model;
@@ -178,7 +179,7 @@ namespace FubuMVC.Spark.Tests.SparkModel
             var policy = new ViewPathPolicy<ITemplate>();
             _templates.Each(policy.Apply);
             var origin = templateAt(1).Origin; //from pak1 which has dependency on pak2
-            var pak2SharedLocation = @"_Pak2\Home\{0}".ToFormat(Shared);
+            var pak2SharedLocation = FileSystem.Combine("_Pak2","Home", Shared);
             ClassUnderTest.SharedViewPathsForOrigin(origin).ShouldContain(pak2SharedLocation);
         }
 
