@@ -7,12 +7,12 @@ using FubuMVC.Core;
 using FubuMVC.Core.Endpoints;
 using FubuMVC.Core.Packaging;
 using FubuMVC.Core.Runtime;
-using FubuMVC.Core.Urls;
+using FubuMVC.Katana;
+using FubuMVC.OwinHost;
 using FubuMVC.StructureMap;
 using FubuTestingSupport;
 using NUnit.Framework;
 using StructureMap;
-using FubuMVC.SelfHost;
 
 namespace ViewEngineIntegrationTesting
 {
@@ -34,46 +34,31 @@ namespace ViewEngineIntegrationTesting
 
     public static class SelfHostHarness
     {
-        private static SelfHostHttpServer _server;
-        private static EndpointDriver _endpoints;
+        private static EmbeddedFubuMvcServer _server;
+
+        public static string Root
+        {
+            get { return _server.BaseAddress; }
+        }
+
+        public static EndpointDriver Endpoints
+        {
+            get { return _server.Endpoints; }
+        }
 
         public static void Start()
         {
             FubuMvcPackageFacility.PhysicalRootPath = GetRootDirectory();
 
-            _server = new SelfHostHttpServer(5500, GetRootDirectory());
-            var runtime = FubuApplication.For<HarnessRegistry>().StructureMap(new Container()).Bootstrap();
-
-
-            _server.Start(runtime);
-
-            var urls = runtime.Factory.Get<IUrlRegistry>();
-            urls.As<UrlRegistry>().RootAt(_server.BaseAddress);
-
-            UrlContext.Stub(_server.BaseAddress);
-
-            _endpoints = new EndpointDriver(urls);
+            _server =
+                FubuApplication.For<HarnessRegistry>()
+                               .StructureMap(new Container())
+                               .RunEmbedded(GetRootDirectory(), PortFinder.FindPort(5500));
         }
 
         public static string GetRootDirectory()
         {
             return AppDomain.CurrentDomain.BaseDirectory.ParentDirectory().ParentDirectory();
-        }
-
-        public static string Root
-        {
-            get
-            {
-                return _server.BaseAddress;
-            }
-        }
-
-        public static EndpointDriver Endpoints
-        {
-            get
-            {
-                return _endpoints;
-            }
         }
 
         public static void Shutdown()
@@ -84,7 +69,6 @@ namespace ViewEngineIntegrationTesting
 
     public class HarnessRegistry : FubuRegistry
     {
-
     }
 
     public static class HttpResponseExtensions
@@ -140,12 +124,12 @@ namespace ViewEngineIntegrationTesting
 
         public static IEnumerable<string> ScriptNames(this HttpResponse response)
         {
-            var document = response.ReadAsXml();
-            var tags = document.DocumentElement.SelectNodes("//script");
+            XmlDocument document = response.ReadAsXml();
+            XmlNodeList tags = document.DocumentElement.SelectNodes("//script");
 
             foreach (XmlElement tag in tags)
             {
-                var name = tag.GetAttribute("src");
+                string name = tag.GetAttribute("src");
                 yield return name.Substring(name.IndexOf('_'));
             }
         }
