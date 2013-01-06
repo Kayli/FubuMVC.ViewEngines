@@ -5,6 +5,9 @@
     </head>
     <body>
         <h2>Default Html.cshtml</h2>
-        @RenderBody()
+        @if (this.ServiceLocator != null)
+        {
+            @RenderBody()
+        }
     </body>
 </html>

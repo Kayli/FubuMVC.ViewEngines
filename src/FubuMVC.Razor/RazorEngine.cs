@@ -49,7 +49,6 @@ namespace FubuMVC.Razor
 
             services.SetServiceIfNone<IViewModifierService<IFubuRazorView>, ViewModifierService<IFubuRazorView>>();
 
-            services.FillType<IViewModifier<IFubuRazorView>, LayoutActivation>();
             services.FillType<IViewModifier<IFubuRazorView>, FubuPartialRendering>();
         }
     }

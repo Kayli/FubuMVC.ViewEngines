@@ -25,6 +25,7 @@ namespace FubuMVC.Razor.Rendering
         private IFubuRazorView _child;
         private Action _renderAction;
         private Func<string> _result;
+        private IServiceLocator _serviceLocator;
 
         protected FubuRazorView()
         {
@@ -34,7 +35,11 @@ namespace FubuMVC.Razor.Rendering
         }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public IServiceLocator ServiceLocator { get; set; }
+        public IServiceLocator ServiceLocator
+        {
+            get { return _child == null ? _serviceLocator : _child.ServiceLocator; }
+            set { _serviceLocator = value; }
+        }
 
         public T Get<T>()
         {
