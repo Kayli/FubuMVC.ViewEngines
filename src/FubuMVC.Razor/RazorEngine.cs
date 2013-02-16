@@ -1,13 +1,12 @@
-﻿using FubuCore;
-using FubuMVC.Core;
+﻿using FubuMVC.Core;
 using FubuMVC.Core.Registration;
+using FubuMVC.Core.UI;
 using FubuMVC.Core.View;
 using FubuMVC.Core.View.Model;
 using FubuMVC.Core.View.Model.Sharing;
 using FubuMVC.Core.View.Rendering;
 using FubuMVC.Razor.Rendering;
 using FubuMVC.Razor.RazorModel;
-using IActivator = Bottles.IActivator;
 
 namespace FubuMVC.Razor
 {
@@ -20,6 +19,12 @@ namespace FubuMVC.Razor
         {
             registry.ViewFacility(new RazorViewFacility(_templateRegistry, _parsings));
             registry.Services(configureServices);
+
+            registry.AlterSettings<CommonViewNamespaces>(x =>
+            {
+                x.AddForType<RazorViewFacility>(); // FubuMVC.Razor
+                x.AddForType<IPartialInvoker>(); // FubuMVC.Core.UI
+            });
         }
 
         private void configureServices(ServiceRegistry services)
@@ -37,13 +42,10 @@ namespace FubuMVC.Razor
             services.SetServiceIfNone(graph);
             services.SetServiceIfNone<ISharingGraph>(graph);
 
-
-            services.FillType<IActivator, RazorActivator>();
-
             services.FillType<ISharedTemplateLocator<IRazorTemplate>, SharedTemplateLocator<IRazorTemplate>>();
             services.FillType<ISharingAttacher<IRazorTemplate>, MasterAttacher<IRazorTemplate>>();
             services.FillType<ITemplateSelector<IRazorTemplate>, RazorTemplateSelector>();
-            services.FillType<IActivator, SharingAttacherActivator<IRazorTemplate>>();
+            services.FillType<Bottles.IActivator, SharingAttacherActivator<IRazorTemplate>>();
             services.FillType<IRenderStrategy, AjaxRenderStrategy>();
             services.FillType<IRenderStrategy, DefaultRenderStrategy>();
 
