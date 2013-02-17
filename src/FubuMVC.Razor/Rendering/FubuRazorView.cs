@@ -118,7 +118,7 @@ namespace FubuMVC.Razor.Rendering
                 {
                     if(required) 
                         throw new InvalidUsageException("No section has been defined for required '{0}'".ToFormat(name));
-                    return null;
+                    return new HtmlString(string.Empty);
                 }
                 return _child.RenderSection(name, required);
             }

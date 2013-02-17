@@ -126,6 +126,8 @@
     <Compile Include="ViewEngines\Razor\Activation\ActivationTest.cs" />
     <Compile Include="ViewEngines\Razor\HelloRazor\HelloRazorEndpoints.cs" />
     <Compile Include="ViewEngines\Razor\HelloRazor\RazorEngineIntegrationTester.cs" />
+    <Compile Include="ViewEngines\Razor\LayoutsAndSections\One\HasLayoutsWithSectionsEndpoint.cs" />
+    <Compile Include="ViewEngines\Razor\LayoutsAndSections\LayoutsWithSectionsIntegrationTester.cs" />
     <Compile Include="ViewEngines\Razor\MultipleLayouts\Features\One\UsesClosest\ClosestController.cs" />
     <Compile Include="ViewEngines\Razor\MultipleLayouts\Features\Two\UsesDefault\UsesDefaultController.cs" />
     <Compile Include="ViewEngines\Razor\MultipleLayouts\RazorEngineMultipleLayoutsIntegrationTester.cs" />
@@ -167,6 +169,8 @@
     <Content Include="ViewEngines\Razor\PageExtensions\PageExtensions.cshtml" />
     <Content Include="ViewEngines\Razor\PageExtensions\Shared\_withoutmodel.cshtml" />
     <Content Include="ViewEngines\Razor\PageExtensions\Shared\_withmodel.cshtml" />
+    <Content Include="ViewEngines\Razor\LayoutsAndSections\One\HasLayoutWithSections.cshtml" />
+    <Content Include="ViewEngines\Razor\LayoutsAndSections\Shared\Application.cshtml" />
     <None Include="ViewEngines\Spark\Activation\Activation.spark" />
     <None Include="ViewEngines\Spark\HelloSpark\Breathe.spark" />
     <None Include="ViewEngines\Spark\HelloSpark\Full.spark" />
