@@ -10,7 +10,7 @@ namespace FubuMVC.Core.View.Model
         T LocatePartial(string partialName, T fromTemplate);
     }
 
-    public class SharedTemplateLocator<T> : ISharedTemplateLocator<T> where T : ITemplateFile
+    public class SharedTemplateLocator<T> : ISharedTemplateLocator<T> where T : class, ITemplateFile
     {
         private readonly ITemplateDirectoryProvider<T> _provider;
         private readonly ITemplateRegistry<T> _templates;
@@ -28,24 +28,21 @@ namespace FubuMVC.Core.View.Model
             return locate(masterName, fromTemplate);
         }
 
-        public T LocatePartial(string partialName, T fromTemplate)
+        public T LocatePartial(string partialName, T fromTemplate) 
         {
-            return locate("_{0}".ToFormat(partialName), fromTemplate);
+            return locate("_{0}".ToFormat(partialName), fromTemplate) ?? locate(partialName, fromTemplate);
         }
 
         private T locate(string name, T fromTemplate)
         {
-            return locateTemplates(name, fromTemplate, true)
+            return locateTemplates(name, fromTemplate, false)
                 .Where(x => _templateSelector.IsAppropriate(x))
                 .FirstOrDefault();
         }
 
         protected IEnumerable<T> locateTemplates(string name, T fromTemplate, bool sharedsOnly)
         {
-            var directories = sharedsOnly 
-                ? _provider.SharedPathsOf(fromTemplate) 
-                : _provider.ReachablesOf(fromTemplate);
-
+            var directories = _provider.ReachablesOf(fromTemplate);
             return _templates.ByNameUnderDirectories(name, directories);
         }
     }

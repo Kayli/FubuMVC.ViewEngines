@@ -25,16 +25,15 @@ namespace FubuMVC.Razor.Tests.RazorModel
             MockFor<ISharingGraph>()
                 .Stub(x => x.SharingsFor(Arg<string>.Is.Anything))
                 .Return(Enumerable.Empty<string>());
-
-            created_builder(false);
+            created_builder_expects();
         }
 
-        private void created_builder(bool includeDirectAncestors)
+        private void created_builder_expects()
         {
             var builder = MockRepository.GenerateMock<ISharedPathBuilder>();
 
             builder
-                .Expect(x => x.BuildBy(_template.FilePath, _template.RootPath, includeDirectAncestors))
+                .Expect(x => x.BuildBy(Arg.Is(_template.FilePath), Arg.Is(_template.RootPath), Arg<bool>.Is.Anything))
                 .Return(_paths);
 
             Container.Inject(builder);
@@ -43,20 +42,12 @@ namespace FubuMVC.Razor.Tests.RazorModel
         [Test]
         public void when_no_sharing_exists_only_local_paths_are_returned()
         {
-            ClassUnderTest.SharedPathsOf(_template).SequenceEqual(_paths).ShouldBeTrue();
-        }
-
-        [Test]
-        public void the_shared_path_builder_is_given_proper_args_when_sharedpaths_of()
-        {
-            ClassUnderTest.SharedPathsOf(_template);
-            MockFor<ISharedPathBuilder>().VerifyAllExpectations();
+            ClassUnderTest.ReachablesOf(_template).SequenceEqual(_paths).ShouldBeTrue();
         }
 
         [Test]
         public void the_shared_path_builder_is_given_proper_args_when_reachables_of()
         {
-            created_builder(true);
             ClassUnderTest.ReachablesOf(_template);
             MockFor<ISharedPathBuilder>().VerifyAllExpectations();
         }
@@ -93,33 +84,6 @@ namespace FubuMVC.Razor.Tests.RazorModel
             Container.Inject<ISharedPathBuilder>(new SharedPathBuilder(new[] { Shared }));
             Container.Inject<ISharingGraph>(_graph);
             Container.Inject<ITemplateRegistry<IRazorTemplate>>(_templates);
-        }
-
-        [Test]
-        public void locals_and_sharings_are_combined_1()
-        {
-            var expected = new List<string>
-            {
-                FubuCore.FileSystem.Combine(_pak1Root, "Actions", "Home", Shared),
-                FubuCore.FileSystem.Combine(_pak1Root, "Actions", Shared),
-                FubuCore.FileSystem.Combine(_pak1Root, Shared),
-                FubuCore.FileSystem.Combine(_pak2Root, Shared)                                   
-            };
-
-            ClassUnderTest.SharedPathsOf(templateAt(1)).ShouldHaveTheSameElementsAs(expected);
-        }
-
-        [Test]
-        public void locals_and_sharings_are_combined_2()
-        {
-            var expected = new List<string>
-            {
-                FubuCore.FileSystem.Combine(_pak2Root, "Home", Shared),
-                FubuCore.FileSystem.Combine(_pak2Root, Shared),
-                FubuCore.FileSystem.Combine(_root, Shared)                                   
-            };
-
-            ClassUnderTest.SharedPathsOf(templateAt(2)).ShouldHaveTheSameElementsAs(expected);
         }
 
         [Test]

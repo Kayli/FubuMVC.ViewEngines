@@ -128,6 +128,8 @@
     <Compile Include="ViewEngines\Razor\HelloRazor\RazorEngineIntegrationTester.cs" />
     <Compile Include="ViewEngines\Razor\LayoutsAndSections\One\HasLayoutsWithSectionsEndpoint.cs" />
     <Compile Include="ViewEngines\Razor\LayoutsAndSections\LayoutsWithSectionsIntegrationTester.cs" />
+    <Compile Include="ViewEngines\Razor\LayoutsWithCustomName\One\UsesCustomLayoutEndpoint.cs" />
+    <Compile Include="ViewEngines\Razor\LayoutsWithCustomName\RazorEngineLayoutWithCustomNameIntegrationTester.cs" />
     <Compile Include="ViewEngines\Razor\MultipleLayouts\Features\One\UsesClosest\ClosestController.cs" />
     <Compile Include="ViewEngines\Razor\MultipleLayouts\Features\Two\UsesDefault\UsesDefaultController.cs" />
     <Compile Include="ViewEngines\Razor\MultipleLayouts\RazorEngineMultipleLayoutsIntegrationTester.cs" />
@@ -171,6 +173,8 @@
     <Content Include="ViewEngines\Razor\PageExtensions\Shared\_withmodel.cshtml" />
     <Content Include="ViewEngines\Razor\LayoutsAndSections\One\HasLayoutWithSections.cshtml" />
     <Content Include="ViewEngines\Razor\LayoutsAndSections\Shared\Application.cshtml" />
+    <Content Include="ViewEngines\Razor\LayoutsWithCustomName\One\CustomLayout.cshtml" />
+    <Content Include="ViewEngines\Razor\LayoutsWithCustomName\One\UsesCustomLayout.cshtml" />
     <None Include="ViewEngines\Spark\Activation\Activation.spark" />
     <None Include="ViewEngines\Spark\HelloSpark\Breathe.spark" />
     <None Include="ViewEngines\Spark\HelloSpark\Full.spark" />
@@ -206,6 +210,7 @@
       <Name>FubuMVC.Spark</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

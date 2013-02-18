@@ -35,7 +35,7 @@ namespace FubuMVC.Razor.Tests.RazorModel
             });
 
             MockFor<ITemplateDirectoryProvider<IRazorTemplate>>()
-                .Stub(x => x.SharedPathsOf(_template)).Return(_directories);
+                .Stub(x => x.ReachablesOf(_template)).Return(_directories);
 
             Container.Inject<ITemplateSelector<IRazorTemplate>>(new RazorTemplateSelector());
 

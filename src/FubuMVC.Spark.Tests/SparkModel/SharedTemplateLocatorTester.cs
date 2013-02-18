@@ -37,7 +37,7 @@ namespace FubuMVC.Spark.Tests.SparkModel
             Container.Inject<ITemplateSelector<ITemplate>>(new SparkTemplateSelector());
 
             MockFor<ITemplateDirectoryProvider<ITemplate>>()
-                .Stub(x => x.SharedPathsOf(_template)).Return(_directories);
+                .Stub(x => x.ReachablesOf(_template)).Return(_directories);
 
             Container.Inject<ITemplateRegistry<ITemplate>>(_templates);
         }

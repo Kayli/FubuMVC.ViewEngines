@@ -7,7 +7,6 @@ namespace FubuMVC.Core.View.Model
 {
     public interface ITemplateDirectoryProvider<T> where T : ITemplateFile
     {
-        IEnumerable<string> SharedPathsOf(T template);
         IEnumerable<string> ReachablesOf(T template);
         IEnumerable<string> SharedViewPathsForOrigin(string origin);
     }
@@ -25,14 +24,23 @@ namespace FubuMVC.Core.View.Model
             _graph = graph;
         }
 
-        public IEnumerable<string> SharedPathsOf(T template)
-        {
-            return getDirectories(template, false).ToList();
-        }
-
         public IEnumerable<string> ReachablesOf(T template)
         {
-            return getDirectories(template, true).ToList();
+            var directories = new List<string>();
+
+            var locals = _builder.BuildBy(template.FilePath, template.RootPath, true);
+            directories.AddRange(locals);
+
+            _graph.SharingsFor(template.Origin).Each(sh =>
+            {
+                var root = _templates.ByOrigin(sh).FirstValue(t => t.RootPath);
+                if (root == null) return;
+
+                var sharings = _builder.BuildBy(root);
+                directories.AddRange(sharings);
+            });
+
+            return directories;
         }
 
         public IEnumerable<string> SharedViewPathsForOrigin(string origin)
@@ -44,25 +52,6 @@ namespace FubuMVC.Core.View.Model
                                  .Where(path => _builder.SharedFolderNames.Any(path.EndsWith))
                                  .Select(t => t))
                                  .Distinct();
-        }
-
-        private IEnumerable<string> getDirectories(T template, bool includeDirectAncestor)
-        {
-            var directories = new List<string>();
-
-            var locals = _builder.BuildBy(template.FilePath, template.RootPath, includeDirectAncestor);            
-            directories.AddRange(locals);
-
-            _graph.SharingsFor(template.Origin).Each(sh =>
-            {
-                var root = _templates.ByOrigin(sh).FirstValue(t => t.RootPath);
-                if (root == null) return;
-
-                var sharings = _builder.BuildBy(root);
-                directories.AddRange(sharings);                                                                                                                    
-            });
-
-            return directories;
         }
     }
 }
